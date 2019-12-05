@@ -1,1 +1,0 @@
-# bedigi-provider-mobile

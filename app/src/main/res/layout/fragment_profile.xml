@@ -1,0 +1,472 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!-- TODO: Update blank fragment layout -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/main_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="@dimen/dp_16"
+            android:orientation="vertical">
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dp_10"
+                android:layout_marginTop="@dimen/dp_16"
+                android:layout_marginEnd="@dimen/dp_10"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="3dp"
+                app:cardElevation="3dp"
+                app:strokeColor="@color/colorPrimary"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <Button
+                        android:id="@+id/bt_profile"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:drawableEnd="@drawable/ic_arrow_drop_down"
+                        android:drawableTint="@color/black"
+                        android:drawablePadding="5dp"
+                        android:text="Basic Informtion"
+                        android:textSize="@dimen/sp_15" />
+
+                    <net.cachapa.expandablelayout.ExpandableLayout
+                        android:id="@+id/exl_basic_info"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/dp_10"
+                        app:el_duration="1000"
+                        app:el_expanded="true"
+                        app:el_parallax="0.5">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/dp_10">
+
+                                <ImageButton
+                                    android:id="@+id/uploadImage"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentTop="true"
+                                    android:layout_toEndOf="@id/image"
+                                    android:background="@android:color/transparent"
+                                    android:padding="@dimen/dp_5"
+                                    android:src="@drawable/ic_edit" />
+
+                                <de.hdodenhof.circleimageview.CircleImageView
+                                    android:id="@+id/image"
+                                    android:layout_width="96dp"
+                                    android:layout_height="96dp"
+                                    android:layout_centerHorizontal="true"
+                                    android:src="@drawable/user_image" />
+
+                            </RelativeLayout>
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/dp_10"
+                                android:hint="Name*">
+
+                                <EditText
+                                    android:id="@+id/first_name"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:inputType="text"
+                                    android:padding="@dimen/dp_10"
+                                    android:textColor="@color/black"
+                                    android:textSize="@dimen/sp_16" />
+
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/dp_10"
+                                android:hint="Email Address">
+
+                                <EditText
+                                    android:id="@+id/email"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:inputType="textEmailAddress"
+                                    android:padding="@dimen/dp_10"
+                                    android:textColor="@color/black"
+                                    android:textSize="@dimen/sp_16" />
+
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/dp_10"
+                                android:hint="DOB*">
+
+                                <EditText
+                                    android:id="@+id/et_dob"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:focusableInTouchMode="false"
+                                    android:inputType="none"
+                                    android:padding="@dimen/dp_10"
+                                    android:textColor="@color/black"
+                                    android:textSize="@dimen/sp_16" />
+
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/dp_10"
+                                android:hint="Expirience (in years)">
+
+                                <EditText
+                                    android:id="@+id/et_expirience"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:focusableInTouchMode="false"
+                                    android:inputType="none"
+                                    android:padding="@dimen/dp_10"
+                                    android:textColor="@color/black"
+                                    android:textSize="@dimen/sp_16" />
+
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="Zipcode">
+
+                                <EditText
+                                    android:id="@+id/et_zipcode"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="@dimen/dp_10"
+                                    android:inputType="number"
+                                    android:maxLength="6"
+                                    android:padding="@dimen/dp_10"
+                                    android:textColor="@color/black"
+                                    android:textSize="@dimen/sp_16" />
+
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                            <info.hoang8f.android.segmented.SegmentedGroup xmlns:segmentedgroup="http://schemas.android.com/apk/res-auto"
+                                android:id="@+id/segmented2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/dp_10"
+                                android:orientation="horizontal"
+                                segmentedgroup:sc_border_width="1dp"
+                                segmentedgroup:sc_corner_radius="10dp"
+                                segmentedgroup:sc_tint_color="@color/colorPrimary">
+
+                                <RadioButton
+                                    android:id="@+id/male"
+                                    style="@style/RadioButton"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="Male" />
+
+                                <RadioButton
+                                    android:id="@+id/female"
+                                    style="@style/RadioButton"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="Female" />
+
+                                <RadioButton
+                                    android:id="@+id/others"
+                                    style="@style/RadioButton"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="Others" />
+
+                            </info.hoang8f.android.segmented.SegmentedGroup>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/dp_10"
+                                android:orientation="horizontal">
+
+                                <CheckBox
+                                    android:id="@+id/check_pcc"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="Is PCC" />
+
+                                <CheckBox
+                                    android:id="@+id/check_expirience"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="Is Fulltime" />
+
+                            </LinearLayout>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/dp_10"
+                                android:layout_marginTop="@dimen/dp_10"
+                                android:text="Select State"
+                                android:textColor="@color/black"
+                                android:visibility="gone" />
+
+                            <Spinner
+                                android:id="@+id/state"
+                                android:layout_marginTop="@dimen/dp_10"
+                                style="@style/spinner_style" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/dp_10"
+                                android:layout_marginTop="@dimen/dp_10"
+                                android:text="Select City"
+                                android:textColor="@color/black"
+                                android:visibility="gone" />
+
+                            <Spinner
+                                android:visibility="gone"
+                                android:id="@+id/city"
+                                style="@style/spinner_style"
+                                android:layout_marginTop="@dimen/dp_10" />
+
+                            <br.com.simplepass.loading_button_lib.customViews.CircularProgressButton
+                                android:id="@+id/signUp"
+                                android:layout_width="250dp"
+                                android:layout_height="40dp"
+                                android:layout_gravity="center_horizontal"
+                                android:layout_marginTop="@dimen/dp_25"
+                                android:background="@drawable/roundedview"
+                                android:text="SAVE"
+                                android:textColor="@color/white"
+                                app:spinning_bar_color="#FFF"
+                                app:spinning_bar_padding="6dp"
+                                app:spinning_bar_width="4dp" />
+
+                        </LinearLayout>
+
+                    </net.cachapa.expandablelayout.ExpandableLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dp_10"
+                android:layout_marginTop="@dimen/dp_16"
+                android:layout_marginEnd="@dimen/dp_10"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="3dp"
+                app:cardElevation="3dp"
+                app:strokeColor="@color/colorPrimary"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <Button
+                        android:id="@+id/bt_visiting"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:drawableTint="@color/black"
+                        android:drawableEnd="@drawable/ic_arrow_drop_down"
+                        android:drawablePadding="5dp"
+                        android:text="Visiting hours"
+                        android:textSize="@dimen/sp_15" />
+
+                    <net.cachapa.expandablelayout.ExpandableLayout
+                        android:id="@+id/exl_visiting"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/dp_10"
+                        app:el_duration="1000"
+                        app:el_expanded="false"
+                        app:el_parallax="0.5">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/dp_5"
+                            android:orientation="vertical">
+
+                            <com.bedigi.partner.Preferences.CustomRadioBt.PresetRadioGroup
+                                android:id="@+id/preset_time_radio_group"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="@dimen/dp_10"
+                                android:orientation="horizontal"
+                                android:weightSum="7"
+                                app:presetRadioCheckedId="@+id/mon">
+
+                                <com.bedigi.partner.Preferences.CustomRadioBt.PresetValueButton
+                                    android:id="@+id/mon"
+                                    style="@style/PresetLayoutButton"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    app:presetButtonUnitText="Seconds"
+                                    app:presetButtonValueText="MON" />
+
+                                <com.bedigi.partner.Preferences.CustomRadioBt.PresetValueButton
+                                    android:id="@+id/tue"
+                                    style="@style/PresetLayoutButton"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    app:presetButtonUnitText="Seconds"
+                                    app:presetButtonValueText="TUE" />
+
+                                <com.bedigi.partner.Preferences.CustomRadioBt.PresetValueButton
+                                    android:id="@+id/wed"
+                                    style="@style/PresetLayoutButton"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    app:presetButtonUnitText="Seconds"
+                                    app:presetButtonValueText="WED" />
+
+                                <com.bedigi.partner.Preferences.CustomRadioBt.PresetValueButton
+                                    android:id="@+id/thr"
+                                    style="@style/PresetLayoutButton"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    app:presetButtonUnitText="Seconds"
+                                    app:presetButtonValueText="THR" />
+
+                                <com.bedigi.partner.Preferences.CustomRadioBt.PresetValueButton
+                                    android:id="@+id/fri"
+                                    style="@style/PresetLayoutButton"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    app:presetButtonUnitText="Seconds"
+                                    app:presetButtonValueText="FRI" />
+
+                                <com.bedigi.partner.Preferences.CustomRadioBt.PresetValueButton
+                                    android:id="@+id/sat"
+                                    style="@style/PresetLayoutButton"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    app:presetButtonUnitText="Seconds"
+                                    app:presetButtonValueText="SAT" />
+
+                                <com.bedigi.partner.Preferences.CustomRadioBt.PresetValueButton
+                                    android:id="@+id/sun"
+                                    style="@style/PresetLayoutButton"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    app:presetButtonUnitText="Seconds"
+                                    app:presetButtonValueText="SUN" />
+
+                            </com.bedigi.partner.Preferences.CustomRadioBt.PresetRadioGroup>
+
+
+                           <androidx.appcompat.widget.SwitchCompat
+                               android:id="@+id/is_available"
+                               android:layout_width="wrap_content"
+                               android:layout_height="wrap_content"
+                               android:layout_gravity="center_horizontal"
+                               android:text="Is Available"
+                               app:switchPadding="@dimen/dp_10"
+                               android:layout_margin="@dimen/dp_10"/>
+
+                            <LinearLayout
+                                android:visibility="gone"
+                                android:id="@+id/timeLL"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:orientation="vertical"
+                                android:layout_margin="@dimen/dp_10"
+                                android:padding="@dimen/dp_5">
+
+                                <CheckBox
+                                    android:id="@+id/early_morning"
+                                    android:text="Early Morning (before 9am)"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"/>
+
+                                <CheckBox
+                                    android:id="@+id/morning"
+                                    android:text="Morning (9am to 12pm)"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"/>
+
+                                <CheckBox
+                                    android:id="@+id/afternoon"
+                                    android:text="Afternoon (12pm to 3 pm)"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"/>
+
+                                <CheckBox
+                                    android:id="@+id/late_afternoon"
+                                    android:text="Late Afternoon (3pm to 6pm)"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"/>
+
+                                <CheckBox
+                                    android:id="@+id/evening"
+                                    android:text="Evening (after 6 pm)"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"/>
+
+
+                            </LinearLayout>
+
+                            <Button
+                                android:id="@+id/saveTimeSlot"
+                                android:layout_width="200dp"
+                                android:layout_height="40dp"
+                                android:layout_gravity="center_horizontal"
+                                android:layout_marginStart="@dimen/dp_25"
+                                android:layout_marginTop="@dimen/dp_20"
+                                android:layout_marginEnd="@dimen/dp_25"
+                                android:layout_marginBottom="@dimen/dp_16"
+                                android:background="@drawable/roundedview"
+                                android:text="SAVE TIME SLOT"
+                                android:textColor="@color/white" />
+
+                        </LinearLayout>
+                    </net.cachapa.expandablelayout.ExpandableLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+
+</FrameLayout>
