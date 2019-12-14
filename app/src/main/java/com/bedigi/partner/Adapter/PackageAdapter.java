@@ -1,11 +1,17 @@
 package com.bedigi.partner.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Paint;
+import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -45,6 +51,7 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.MyViewHo
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
         ImageView package_image;
+        ImageButton sharePack;
         CardView card_view;
         TextView heading, location, description, likes, actual_price, discount, discount_price;
 
@@ -59,6 +66,7 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.MyViewHo
             discount_price = (TextView) root.findViewById(R.id.discount_price);
 
             package_image=(ImageView)root.findViewById(R.id.package_image);
+            sharePack=(ImageButton)root.findViewById(R.id.sharePack);
 
             card_view=(CardView)root.findViewById(R.id.card_view);
 
@@ -100,6 +108,37 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.MyViewHo
                 listener.onEvent("1", position);
             }
         });
+
+        holder.sharePack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+               // listener.onEvent("2", position);
+
+                try{
+                    if(!(verticalList.get(position).image).matches("")){
+                        Bitmap bm = ((BitmapDrawable) holder.package_image.getDrawable()).getBitmap();
+                        Intent intent = new Intent(Intent.ACTION_SEND);
+                        intent.putExtra(Intent.EXTRA_TEXT, "Type text to share here...");
+                        String path = MediaStore.Images.Media.insertImage(context.getContentResolver(), bm, "", null);
+                        Uri screenshotUri = Uri.parse(path);
+                        intent.putExtra(Intent.EXTRA_STREAM, screenshotUri);
+                        intent.setType("image/*");
+                        context.startActivity(Intent.createChooser(intent, "Share via..."));
+
+                    } else {
+                        Intent intent = new Intent(Intent.ACTION_SEND);
+                        intent.putExtra(Intent.EXTRA_TEXT, "Type text to share here...");
+                        intent.setType("text/plain");
+                        context.startActivity(Intent.createChooser(intent, "Share via..."));
+                    }
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+
+
+            }
+        });
+
 
     }
 

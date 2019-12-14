@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/accept"
+        android:title="Accept" />
+
+    <item
+        android:id="@+id/reject"
+        android:title="Reject" />
+
+    <item
+        android:id="@+id/start"
+        android:title="Start Service" />
+
+    <item
+        android:id="@+id/stop"
+        android:title="Stop Service" />
+
+    <item
+        android:id="@+id/hold"
+        android:title="Put on Hold" />
+
+</menu>

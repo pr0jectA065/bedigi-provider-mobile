@@ -30,7 +30,6 @@
                 app:layout_scrollFlags="scroll|enterAlways"
                 app:popupTheme="@style/AppTheme.PopupOverlay">
 
-
                 <Spinner
                     android:id="@+id/location_spinner"
                     android:layout_width="wrap_content"
@@ -68,16 +67,16 @@
                     android:gravity="center_vertical|end">
 
                     <ImageButton
-                        android:visibility="gone"
-                        android:id="@+id/wallet"
+                        android:id="@+id/message"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="@dimen/dp_10"
                         android:background="@android:color/transparent"
                         android:padding="@dimen/dp_4"
-                        android:src="@drawable/ic_wallet" />
+                        android:src="@drawable/ic_message" />
 
                     <ImageButton
+                        android:visibility="gone"
                         android:id="@+id/notifications"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -114,7 +113,8 @@
                 android:layout_height="60dp"
                 android:layout_alignParentBottom="true"
                 app:backgroundColor="@color/colorPrimary"
-                app:menu="@menu/bottom_nav"/>
+                app:menu="@menu/bottom_nav"
+                app:itemFontFamily="@font/poppins"/>
 
             <FrameLayout
                 android:id="@+id/main_container"
@@ -136,6 +136,7 @@
         android:fitsSystemWindows="true"
         android:visibility="visible"
         app:itemTextColor="@color/white"
-        app:menu="@menu/nav_menu" />
+        app:menu="@menu/nav_menu"
+        app:itemTextAppearance="@style/Style_TextView"/>
 
 </androidx.drawerlayout.widget.DrawerLayout>

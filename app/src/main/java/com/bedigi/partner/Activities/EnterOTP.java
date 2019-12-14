@@ -28,6 +28,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.gson.JsonObject;
 import com.mukesh.OnOtpCompletionListener;
 import com.mukesh.OtpView;
+import com.onesignal.OneSignal;
 
 import org.json.JSONObject;
 
@@ -151,6 +152,16 @@ public class EnterOTP extends AppCompatActivity {
             }
         });
 
+        OneSignal.idsAvailable(new OneSignal.IdsAvailableHandler() {
+            @Override
+            public void idsAvailable(String userId, String registrationId) {
+                android_id = userId;
+                Log.d("android_id", android_id);
+                if (registrationId != null)
+                    Log.d("debug", "registrationId:" + registrationId);
+            }
+        });
+
         requestHint();
     }
 
@@ -211,7 +222,7 @@ public class EnterOTP extends AppCompatActivity {
 
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("mobile_number", getIntent().getStringExtra("phone"));
-            jsonObject.addProperty("device_id", "");
+            jsonObject.addProperty("device_id", android_id);
             jsonObject.addProperty("user_type", "3");
 
             Call<JsonObject> d = RetrofitAPI.getInstance().getApi().login(jsonObject);

@@ -21,6 +21,7 @@
           android:layout_height="match_parent" />
 
       <com.google.android.material.floatingactionbutton.FloatingActionButton
+          android:visibility="gone"
           android:id="@+id/add_service"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
@@ -28,6 +29,23 @@
           android:layout_alignParentEnd="true"
           android:layout_margin="@dimen/dp_16"
           android:src="@drawable/ic_add"/>
+
+      <com.tuann.floatingactionbuttonexpandable.FloatingActionButtonExpandable
+          android:id="@+id/fab"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          app:fab_content="Add Service"
+          app:fab_padding_text_icon="8dp"
+          app:fab_text_color="@android:color/white"
+          app:fab_bg_color="@color/colorPrimary"
+          android:layout_margin="@dimen/dp_16"
+          app:fab_icon="@drawable/ic_add"
+          app:fab_duration="100"
+          android:layout_alignParentBottom="true"
+          android:layout_alignParentEnd="true"
+          app:fab_text_size="@dimen/sp_16"
+          app:fab_padding="10dp"
+          app:fab_expanded="true"/>
 
   </RelativeLayout>
 </FrameLayout>

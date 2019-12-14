@@ -1,9 +1,17 @@
 package com.bedigi.partner;
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.multidex.MultiDex;
 import androidx.multidex.MultiDexApplication;
+
+import com.bedigi.partner.Preferences.FontsOverride;
+import com.onesignal.OSNotificationAction;
+import com.onesignal.OSNotificationOpenResult;
+import com.onesignal.OneSignal;
+
+import org.json.JSONObject;
 
 
 /**
@@ -18,18 +26,20 @@ public class PushSignal extends MultiDexApplication {
     public void onCreate() {
         super.onCreate();
 
-       /* OneSignal.startInit(this)
+        OneSignal.startInit(this)
                 .setNotificationOpenedHandler(new ExampleNotificationOpenedHandler())
                 .inFocusDisplaying(OneSignal.OSInFocusDisplayOption.Notification)
                 .unsubscribeWhenNotificationsAreDisabled(true)
                 .init();
-*/
-        //OneSignal.enableNotificationsWhenActive(true);
 
+        FontsOverride.setDefaultFont(this, "DEFAULT", "fonts/Poppins-Regular.ttf");
+        FontsOverride.setDefaultFont(this, "MONOSPACE", "fonts/Poppins-Regular.ttf");
+
+        //OneSignal.enableNotificationsWhenActive(true);
 
     }
 
-    /*class ExampleNotificationOpenedHandler implements OneSignal.NotificationOpenedHandler {
+    class ExampleNotificationOpenedHandler implements OneSignal.NotificationOpenedHandler {
         // This fires when a notification is opened by tapping on it.
         @Override
         public void notificationOpened(OSNotificationOpenResult result) {
@@ -55,13 +65,13 @@ public class PushSignal extends MultiDexApplication {
 
             // Add the following to your AndroidManifest.xml to prevent the launching of your main Activity
             //   if you are calling startActivity above.
-     *//*
-        <application ...>
+
+       /* <application ...>
           <meta-data android:name="com.onesignal.NotificationOpened.DEFAULT" android:value="DISABLE" />
-        </application>
-     *//*
+        </application>*/
+
         }
-    }*/
+    }
 
     @Override
     protected void attachBaseContext(Context base) {

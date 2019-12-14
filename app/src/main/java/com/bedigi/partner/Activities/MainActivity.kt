@@ -129,6 +129,12 @@ class MainActivity : AppCompatActivity() {
 
             when (id) {
 
+                R.id.history -> {
+                    val mainIntent = Intent(this@MainActivity, Appointments::class.java)
+                    startActivity(mainIntent)
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
+                }
+
                 R.id.privacyPolicy -> {
                     val mainIntent = Intent(this@MainActivity, PrivacyPolicy::class.java)
                     startActivity(mainIntent)
@@ -136,7 +142,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 R.id.logout -> {
-                    val builder = AlertDialog.Builder(this@MainActivity, R.style.AppCompatAlertDialogStyle)
+                    val builder = AlertDialog.Builder(this@MainActivity, R.style.ThemeOverlay_MaterialComponents_MaterialAlertDialog)
                     builder.setTitle(Html.fromHtml("<b>Logout</b>"))
                     builder.setMessage("Are you sure you want to logout?")
                     builder.setPositiveButton("OK", DialogInterface.OnClickListener { dialogInterface, i ->
@@ -161,7 +167,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         notifications = findViewById<View>(R.id.notifications) as ImageButton
-        wallet = findViewById<View>(R.id.wallet) as ImageButton
+        message = findViewById<View>(R.id.message) as ImageButton
 
         notifications!!.setOnClickListener {
           /*  *//*val mainIntent = Intent(this@MainActivity, Notifications::class.java)
@@ -169,10 +175,10 @@ class MainActivity : AppCompatActivity() {
             overridePendingTransition(R.anim.fade_in, R.anim.fade_out)*/
         }
 
-        wallet!!.setOnClickListener {
-           /* val mainIntent = Intent(this@MainActivity, Wallet::class.java)
+        message!!.setOnClickListener {
+            val mainIntent = Intent(this@MainActivity, ChatList::class.java)
             startActivity(mainIntent)
-            overridePendingTransition(R.anim.fade_in, R.anim.fade_out)*/
+            overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
         }
 
         location = findViewById<View>(R.id.location) as TextView
@@ -203,7 +209,7 @@ class MainActivity : AppCompatActivity() {
         var drawer: DrawerLayout? = null
         var toolbar: Toolbar? = null
 
-        var wallet: ImageButton? = null
+        var message: ImageButton? = null
         var notifications: ImageButton? = null
         var location: TextView? = null
     }
