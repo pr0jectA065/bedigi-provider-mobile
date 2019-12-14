@@ -44,6 +44,8 @@
             android:layout_marginEnd="@dimen/dp_16"
             android:layout_marginStart="@dimen/dp_16"
             android:layout_marginTop="@dimen/dp_16"
+            app:startIconDrawable="@drawable/icon_phone"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:hint="Mobile Number">
 
             <EditText

@@ -40,9 +40,10 @@
                         android:layout_height="wrap_content"
                         android:background="@color/white"
                         android:drawableEnd="@drawable/ic_arrow_drop_down"
-                        android:drawableTint="@color/black"
                         android:drawablePadding="5dp"
                         android:text="Basic Informtion"
+                        android:insetBottom="0dp"
+                        android:insetTop="0dp"
                         android:textSize="@dimen/sp_15" />
 
                     <net.cachapa.expandablelayout.ExpandableLayout
@@ -87,6 +88,8 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/dp_10"
+                                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                                app:startIconDrawable="@drawable/icon_name"
                                 android:hint="Name*">
 
                                 <EditText
@@ -104,6 +107,8 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/dp_10"
+                                app:startIconDrawable="@drawable/icon_email"
+                                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                                 android:hint="Email Address">
 
                                 <EditText
@@ -120,6 +125,8 @@
                             <com.google.android.material.textfield.TextInputLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                app:startIconDrawable="@drawable/icon_dob"
+                                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                                 android:layout_marginTop="@dimen/dp_10"
                                 android:hint="DOB*">
 
@@ -138,15 +145,16 @@
                             <com.google.android.material.textfield.TextInputLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                                 android:layout_marginTop="@dimen/dp_10"
-                                android:hint="Expirience (in years)">
+                                app:startIconDrawable="@drawable/icon_experience"
+                                android:hint="Experience (in years)">
 
                                 <EditText
                                     android:id="@+id/et_expirience"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:focusableInTouchMode="false"
-                                    android:inputType="none"
+                                    android:inputType="numberDecimal"
                                     android:padding="@dimen/dp_10"
                                     android:textColor="@color/black"
                                     android:textSize="@dimen/sp_16" />
@@ -156,6 +164,9 @@
                             <com.google.android.material.textfield.TextInputLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/dp_10"
+                                app:startIconDrawable="@drawable/icon_location"
+                                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                                 android:hint="Zipcode">
 
                                 <EditText
@@ -215,48 +226,57 @@
 
                                 <CheckBox
                                     android:id="@+id/check_pcc"
-                                    android:layout_width="0dp"
+                                    android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
-                                    android:text="Is PCC" />
+                                    android:text="Is Police Clearance Certified" />
 
                                 <CheckBox
                                     android:id="@+id/check_expirience"
-                                    android:layout_width="0dp"
+                                    android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
                                     android:text="Is Fulltime" />
 
                             </LinearLayout>
 
-                            <TextView
-                                android:layout_width="wrap_content"
+                            <LinearLayout
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="@dimen/dp_10"
-                                android:layout_marginTop="@dimen/dp_10"
-                                android:text="Select State"
-                                android:textColor="@color/black"
-                                android:visibility="gone" />
+                                android:orientation="horizontal"
+                                android:layout_marginTop="@dimen/dp_10">
 
-                            <Spinner
-                                android:id="@+id/state"
-                                android:layout_marginTop="@dimen/dp_10"
-                                style="@style/spinner_style" />
+                                <RelativeLayout
+                                    android:layout_width="0dp"
+                                    android:layout_weight="1"
+                                    android:layout_height="wrap_content"
+                                    android:padding="8dp"
+                                    android:layout_marginEnd="@dimen/dp_5"
+                                    android:background="#f0efef">
+                                    <Spinner
+                                        style="@style/Widget.AppCompat.DropDownItem.Spinner"
+                                        android:id="@+id/state"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="30dp" />
+                                </RelativeLayout>
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="@dimen/dp_10"
-                                android:layout_marginTop="@dimen/dp_10"
-                                android:text="Select City"
-                                android:textColor="@color/black"
-                                android:visibility="gone" />
 
-                            <Spinner
-                                android:visibility="gone"
-                                android:id="@+id/city"
-                                style="@style/spinner_style"
-                                android:layout_marginTop="@dimen/dp_10" />
+                                <RelativeLayout
+                                    android:layout_width="0dp"
+                                    android:layout_weight="1"
+                                    android:layout_height="wrap_content"
+                                    android:padding="8dp"
+                                    android:layout_marginStart="@dimen/dp_5"
+                                    android:background="#f0efef">
+                                    <Spinner
+                                        android:layout_width="match_parent"
+                                        android:layout_height="30dp"
+                                        style="@style/Widget.AppCompat.DropDownItem.Spinner"
+                                        android:visibility="gone"
+                                        android:id="@+id/city"/>
+                                </RelativeLayout>
+
+                            </LinearLayout>
 
                             <br.com.simplepass.loading_button_lib.customViews.CircularProgressButton
                                 android:id="@+id/signUp"
@@ -299,10 +319,11 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@color/white"
-                        android:drawableTint="@color/black"
                         android:drawableEnd="@drawable/ic_arrow_drop_down"
                         android:drawablePadding="5dp"
                         android:text="Visiting hours"
+                        android:insetBottom="0dp"
+                        android:insetTop="0dp"
                         android:textSize="@dimen/sp_15" />
 
                     <net.cachapa.expandablelayout.ExpandableLayout
@@ -311,7 +332,7 @@
                         android:layout_height="wrap_content"
                         android:padding="@dimen/dp_10"
                         app:el_duration="1000"
-                        app:el_expanded="false"
+                        app:el_expanded="true"
                         app:el_parallax="0.5">
 
                         <LinearLayout
@@ -449,11 +470,13 @@
                             <Button
                                 android:id="@+id/saveTimeSlot"
                                 android:layout_width="200dp"
-                                android:layout_height="40dp"
+                                android:layout_height="wrap_content"
                                 android:layout_gravity="center_horizontal"
                                 android:layout_marginStart="@dimen/dp_25"
                                 android:layout_marginTop="@dimen/dp_20"
                                 android:layout_marginEnd="@dimen/dp_25"
+                                android:insetBottom="0dp"
+                                android:insetTop="0dp"
                                 android:layout_marginBottom="@dimen/dp_16"
                                 android:background="@drawable/roundedview"
                                 android:text="SAVE TIME SLOT"

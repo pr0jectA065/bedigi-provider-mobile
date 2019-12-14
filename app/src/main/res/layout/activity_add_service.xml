@@ -12,28 +12,42 @@
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
         app:navigationIcon="@drawable/ic_back"
+        app:titleTextColor="@color/white"
         app:popupTheme="@style/AppTheme.PopupOverlay"
         app:titleTextAppearance="@style/Toolbar.TitleText" />
 
     <ImageButton
         android:id="@+id/image"
         android:background="@android:color/transparent"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="@dimen/dp_16"
         android:src="@drawable/ic_add_image"/>
 
-    <Spinner
-        android:id="@+id/service"
-        style="@style/spinner_style" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:layout_marginStart="@dimen/dp_16"
+        android:layout_marginEnd="@dimen/dp_16"
+        android:background="#f0efef"
+        android:layout_marginTop="@dimen/dp_10">
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            style="@style/Widget.AppCompat.DropDownItem.Spinner"
+            android:id="@+id/service"/>
+    </RelativeLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_marginStart="@dimen/dp_16"
         android:layout_marginEnd="@dimen/dp_16"
+        android:layout_marginTop="@dimen/dp_16"
         android:layout_height="wrap_content"
-        android:hint="Service Name">
+        android:hint="Service Name"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
         <EditText
             android:id="@+id/service_name"
@@ -56,7 +70,8 @@
             android:layout_weight="1"
             android:layout_marginEnd="@dimen/dp_10"
             android:layout_height="wrap_content"
-            android:hint="Price">
+            android:hint="Price"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
             <EditText
                 android:id="@+id/price"
@@ -73,7 +88,8 @@
             android:layout_weight="1"
             android:layout_marginStart="@dimen/dp_10"
             android:layout_height="wrap_content"
-            android:hint="Selling Price">
+            android:hint="Selling Price"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
             <EditText
                 android:id="@+id/sellprice"
@@ -92,7 +108,8 @@
         android:layout_marginStart="@dimen/dp_16"
         android:layout_marginEnd="@dimen/dp_16"
         android:layout_height="100dp"
-        android:hint="Description">
+        android:hint="Description"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
         <EditText
             android:id="@+id/description"
@@ -110,7 +127,8 @@
         android:layout_marginTop="@dimen/dp_16"
         android:layout_marginEnd="@dimen/dp_16"
         android:layout_height="wrap_content"
-        android:hint="No of Hours">
+        android:hint="No of Hours"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
         <EditText
             android:id="@+id/no_of_hours"

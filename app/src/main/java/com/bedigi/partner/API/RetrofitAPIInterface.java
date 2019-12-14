@@ -38,8 +38,23 @@ public interface RetrofitAPIInterface {
     @GET("provider/services/provider_id/{provider_id}")
     Call<JsonObject> services(@Path("provider_id") String provider_id);
 
+    @GET("provider/addtimeslot/provider_id/{provider_id}")
+    Call<JsonObject> addtimeslot(@Path("provider_id") String provider_id);
+
     @GET("services/list")
     Call<JsonObject> serviceList();
+
+    @GET("Order/applist/provider_id/{provider_id}/today/1")
+    Call<JsonObject> todayhistoryList(@Path("provider_id") String provider_id);
+
+    @GET("Order/applist/provider_id/{provider_id}/upcoming/1")
+    Call<JsonObject> upcominghistoryList(@Path("provider_id") String provider_id);
+
+    @GET("Order/applist/provider_id/{provider_id}")
+    Call<JsonObject> historyList(@Path("provider_id") String provider_id);
+
+    @GET("services/chatlist/provider_id/{provider_id}")
+    Call<JsonObject> getChatList(@Path("provider_id") String provider_id);
 
     @POST("provider/services/provider_id/{provider_id}")
     Call<JsonObject> add_service(@Path("provider_id") String provider_id, @Body JsonObject loginDetails);
@@ -49,5 +64,14 @@ public interface RetrofitAPIInterface {
 
     @POST("provider/services/provider_id/{provider_id}/")
     Call<JsonObject> update_service(@Path("provider_id") String provider_id, @Body JsonObject loginDetails);
+
+    @POST("Order/appointmentstatus/appointment_id/{appointment_id}")
+    Call<JsonObject> appointmentstatus(@Path("appointment_id") String appointment_id, @Body JsonObject loginDetails);
+
+    @POST("services/chat/service_provider_id/{service_provider_id}")
+    Call<JsonObject> sendChatMessage(@Path("service_provider_id") String service_provider_id,@Body JsonObject obj);
+
+    @GET("services/chat/customer_id/{customer_id}/provider_id/{provider_id}/service_provider_id/{service_provider_id}")
+    Call<JsonObject> getChatMessage(@Path("customer_id") String customer_id,@Path("provider_id") String provider_id,@Path("service_provider_id") String service_provider_id);
 
 }

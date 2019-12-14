@@ -163,7 +163,6 @@ public class AddService extends AppCompatActivity {
                         Log.e("API", response.body().toString());
 
                         if (obj.getString("status").matches("true")) {
-
                             finish();
 
                         } else {
@@ -416,6 +415,12 @@ public class AddService extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         save.dispose();
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
 }

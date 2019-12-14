@@ -42,8 +42,13 @@ import android.widget.Switch;
 import android.widget.Toast;
 
 import com.bedigi.partner.API.RetrofitAPI;
+import com.bedigi.partner.Activities.AddService;
+import com.bedigi.partner.Adapter.PackageAdapter;
+import com.bedigi.partner.Model.PackageData;
 import com.bedigi.partner.Model.StateCityListModel;
+import com.bedigi.partner.Model.TimeSlotModel;
 import com.bedigi.partner.Preferences.AppPreferences;
+import com.bedigi.partner.Preferences.CustomRadioBt.PresetRadioGroup;
 import com.bedigi.partner.R;
 import com.google.gson.JsonObject;
 import com.squareup.picasso.Picasso;
@@ -52,6 +57,7 @@ import com.wang.avi.AVLoadingIndicatorView;
 import net.cachapa.expandablelayout.ExpandableLayout;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
@@ -111,6 +117,11 @@ public class Profile extends Fragment {
     String is_available_str ="",early_morning_str="",morning_str="",afternoon_str="",late_afternoon_str="",evening_str="";
     Button saveTimeSlot;
 
+    PresetRadioGroup mSetDurationPresetRadioGroup;
+    String daySel = "mon",timeslot_id;
+    List<TimeSlotModel> timeList ;
+    JSONArray time_slot_arr;
+
     public Profile() {
         // Required empty public constructor
     }
@@ -122,6 +133,8 @@ public class Profile extends Fragment {
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_profile, container, false);
         context = getActivity();
+
+        timeList = new ArrayList<>();
 
         appPreferences = new AppPreferences(context);
         signUp = (CircularProgressButton) view.findViewById(R.id.signUp);
@@ -173,6 +186,7 @@ public class Profile extends Fragment {
                 } else{
                     is_pcc_check = "0";
                 }
+                check_pcc.setChecked(b);
 
             }
         });
@@ -185,6 +199,7 @@ public class Profile extends Fragment {
                 } else{
                     is_exp_check = "0";
                 }
+                check_expirience.setChecked(b);
             }
         });
 
@@ -399,11 +414,12 @@ public class Profile extends Fragment {
         saveTimeSlot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                saveTimeSlot();
+                saveTimeSlot(daySel,timeslot_id);
             }
         });
 
         getState();
+        getTimeSlot();
 
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -415,10 +431,227 @@ public class Profile extends Fragment {
 
         email.setText(appPreferences.getEmail());
 
+        mSetDurationPresetRadioGroup = (PresetRadioGroup) view.findViewById(R.id.preset_time_radio_group);
+        mSetDurationPresetRadioGroup.setOnCheckedChangeListener(new PresetRadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(View radioGroup, View radioButton, boolean isChecked, int checkedId) {
+
+                saveTimeSlot(daySel,timeslot_id);
+
+                if (checkedId == R.id.mon) {
+                    daySel = "mon";
+                } else if (checkedId == R.id.tue) {
+                    daySel = "tue";
+                } else if (checkedId == R.id.wed) {
+                    daySel = "wed";
+                } else if (checkedId == R.id.thr) {
+                    daySel = "thur";
+                } else if (checkedId == R.id.fri) {
+                    daySel = "fri";
+                } else if (checkedId == R.id.sat) {
+                    daySel = "sat";
+                } else if (checkedId == R.id.sun) {
+                    daySel = "sun";
+                }
+
+                if(time_slot_arr.length()>0){
+                    for(int i=0;i<time_slot_arr.length();i++){
+                        try {
+                            if(time_slot_arr.getJSONObject(i).getString("day").matches(daySel)){
+
+                                timeslot_id = time_slot_arr.getJSONObject(i).getString("timeslot_id");
+
+                                if(time_slot_arr.getJSONObject(i).getString("is_available").matches("0")){
+                                    is_available.setChecked(false);
+                                    is_available_str = "0";
+                                }else{
+                                    is_available.setChecked(true);
+                                    is_available_str = "1";
+                                }
+
+                                if(is_available.isChecked()){
+                                    timeLL.setVisibility(View.VISIBLE);
+                                    early_morning_str = time_slot_arr.getJSONObject(i).getString("early_morning");
+                                    morning_str = time_slot_arr.getJSONObject(i).getString("morning");
+                                    afternoon_str = time_slot_arr.getJSONObject(i).getString("afternoon");
+                                    late_afternoon_str = time_slot_arr.getJSONObject(i).getString("late_afternoon");
+                                    evening_str = time_slot_arr.getJSONObject(i).getString("evening");
+                                }else{
+                                    timeLL.setVisibility(View.GONE);
+                                }
+
+                                if(early_morning_str.matches("0")){
+                                    early_morning.setChecked(false);
+                                } else {
+                                    early_morning.setChecked(true);
+                                }
+
+                                if(morning_str.matches("0")){
+                                    morning.setChecked(false);
+                                } else {
+                                    morning.setChecked(true);
+                                }
+
+                                if(afternoon_str.matches("0")){
+                                    afternoon.setChecked(false);
+                                } else {
+                                    afternoon.setChecked(true);
+                                }
+
+                                if(late_afternoon_str.matches("0")){
+                                    late_afternoon.setChecked(false);
+                                } else {
+                                    late_afternoon.setChecked(true);
+                                }
+
+                                if(evening_str.matches("0")){
+                                    evening.setChecked(false);
+                                } else {
+                                    evening.setChecked(true);
+                                }
+
+
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
+
+            }
+        });
+
         return view;
     }
 
-    private void saveTimeSlot() {
+    private void getTimeSlot(){
+        dialog = new Dialog(context);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        dialog.setContentView(R.layout.dialog_layout);
+        dialog.setCancelable(false);
+        AVLoadingIndicatorView progressView = (AVLoadingIndicatorView) dialog.findViewById(R.id.progressView);
+        //dialog.show();
+
+        try {
+            Call<JsonObject> d = RetrofitAPI.getInstance().getApi().addtimeslot(appPreferences.getId());
+            d.enqueue(new Callback<JsonObject>() {
+                @Override
+                public void onResponse(Call<JsonObject> call, retrofit2.Response<JsonObject> response) {
+                    try {
+                        dialog.dismiss();
+                        JSONObject obj = new JSONObject(response.body().toString());
+
+                        time_slot_arr = obj.getJSONArray("data");
+
+                        Log.e("API", response.body().toString());
+
+                        if (obj.getString("status").matches("true")) {
+
+                            for (int i = 0; i < time_slot_arr.length(); i++) {
+
+                                timeList.add(new TimeSlotModel(time_slot_arr.getJSONObject(i).getString("timeslot_id"),
+                                        time_slot_arr.getJSONObject(i).getString("provider_id"),
+                                        time_slot_arr.getJSONObject(i).getString("day"),
+                                        time_slot_arr.getJSONObject(i).getString("is_available"),
+                                        time_slot_arr.getJSONObject(i).getString("early_morning"),
+                                        time_slot_arr.getJSONObject(i).getString("morning"),
+                                        time_slot_arr.getJSONObject(i).getString("afternoon"),
+                                        time_slot_arr.getJSONObject(i).getString("late_afternoon"),
+                                        time_slot_arr.getJSONObject(i).getString("evening")));
+
+                            }
+
+                            timeslot_id = time_slot_arr.getJSONObject(0).getString("timeslot_id");
+
+                            if(time_slot_arr.length()>0){
+                                for(int i=0;i<time_slot_arr.length();i++){
+                                    try {
+                                        if(time_slot_arr.getJSONObject(i).getString("day").matches(daySel)){
+
+                                            timeslot_id = time_slot_arr.getJSONObject(i).getString("timeslot_id");
+
+                                            if(time_slot_arr.getJSONObject(i).getString("is_available").matches("0")){
+                                                is_available.setChecked(false);
+                                                is_available_str = "0";
+                                            }else{
+                                                is_available.setChecked(true);
+                                                is_available_str = "1";
+                                            }
+
+                                            if(is_available.isChecked()){
+                                                timeLL.setVisibility(View.VISIBLE);
+                                            }else{
+                                                timeLL.setVisibility(View.GONE);
+                                                early_morning_str = time_slot_arr.getJSONObject(i).getString("early_morning");
+                                                morning_str = time_slot_arr.getJSONObject(i).getString("morning");
+                                                afternoon_str = time_slot_arr.getJSONObject(i).getString("afternoon");
+                                                late_afternoon_str = time_slot_arr.getJSONObject(i).getString("late_afternoon");
+                                                evening_str = time_slot_arr.getJSONObject(i).getString("evening");
+                                            }
+
+                                            if(early_morning_str.matches("0")){
+                                                early_morning.setChecked(false);
+                                            } else {
+                                                early_morning.setChecked(true);
+                                            }
+
+                                            if(morning_str.matches("0")){
+                                                morning.setChecked(false);
+                                            } else {
+                                                morning.setChecked(true);
+                                            }
+
+                                            if(afternoon_str.matches("0")){
+                                                afternoon.setChecked(false);
+                                            } else {
+                                                afternoon.setChecked(true);
+                                            }
+
+                                            if(late_afternoon_str.matches("0")){
+                                                late_afternoon.setChecked(false);
+                                            } else {
+                                                late_afternoon.setChecked(true);
+                                            }
+
+                                            if(evening_str.matches("0")){
+                                                evening.setChecked(false);
+                                            } else {
+                                                evening.setChecked(true);
+                                            }
+
+
+                                        }
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }
+
+                        } else {
+                            Toasty.error(context, obj.getString("msg"), Toast.LENGTH_LONG).show();
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        dialog.dismiss();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<JsonObject> call, Throwable t) {
+                    Log.e("re", "" + t.toString());
+                }
+            });
+
+        } catch (Exception e) {
+            dialog.dismiss();
+            e.printStackTrace();
+        }
+    }
+
+    private void saveTimeSlot(String day,String timeslot_id) {
         dialog = new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
@@ -426,11 +659,12 @@ public class Profile extends Fragment {
         dialog.setCancelable(false);
         AVLoadingIndicatorView progressView = (AVLoadingIndicatorView) dialog.findViewById(R.id.progressView);
         dialog.show();
-        signUp.startAnimation();
+        //signUp.startAnimation();
 
         try {
 
             JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("timeslot_id", timeslot_id);
             jsonObject.addProperty("day", day);
             jsonObject.addProperty("is_available", is_available_str);
             jsonObject.addProperty("early_morning",early_morning_str);
@@ -445,15 +679,15 @@ public class Profile extends Fragment {
                 public void onResponse(Call<JsonObject> call, retrofit2.Response<JsonObject> response) {
                     try {
 
-                        signUp.stopAnimation();
-                        signUp.revertAnimation();
+                        //signUp.stopAnimation();
+                        //signUp.revertAnimation();
                         dialog.dismiss();
 
                         JSONObject obj = new JSONObject(response.body().toString());
                         Log.e("API", response.body().toString());
                         if (obj.getString("status").matches("true")) {
-                            Toasty.success(context, obj.getString("message"), Toast.LENGTH_LONG).show();
-
+                            //Toasty.success(context, obj.getString("message"), Toast.LENGTH_LONG).show();
+                            getTimeSlot();
                         } else {
                             dialog.dismiss();
                             Toasty.error(context, obj.getString("message"),
@@ -462,8 +696,8 @@ public class Profile extends Fragment {
 
                     } catch (Exception e) {
                         dialog.dismiss();
-                        signUp.stopAnimation();
-                        signUp.revertAnimation();
+                        //signUp.stopAnimation();
+                        //signUp.revertAnimation();
                         e.printStackTrace();
                     }
                 }
@@ -471,16 +705,16 @@ public class Profile extends Fragment {
                 @Override
                 public void onFailure(Call<JsonObject> call, Throwable t) {
                     dialog.dismiss();
-                    signUp.stopAnimation();
-                    signUp.revertAnimation();
+                    //signUp.stopAnimation();
+                    //signUp.revertAnimation();
                     Log.e("re", "" + t.toString());
                 }
             });
 
         } catch (Exception e) {
             dialog.dismiss();
-            signUp.stopAnimation();
-            signUp.revertAnimation();
+           // signUp.stopAnimation();
+            //signUp.revertAnimation();
             e.printStackTrace();
         }
     }
@@ -505,6 +739,8 @@ public class Profile extends Fragment {
             jsonObject.addProperty("dob", et_dob.getText().toString().trim());
             jsonObject.addProperty("city_id", city_selected);
             jsonObject.addProperty("state_id", state_selected);
+            jsonObject.addProperty("is_PCC", is_pcc_check);
+            jsonObject.addProperty("is_fulltime", is_exp_check);
             jsonObject.addProperty("zipcode", et_zipcode.getText().toString().trim());
             jsonObject.addProperty("experience_years", et_expirience.getText().toString().trim());
 
@@ -737,7 +973,24 @@ public class Profile extends Fragment {
                             et_zipcode.setText(data.getString("zipcode"));
 
                             email.setText(data.getString("Email"));
+
                             et_expirience.setText(data.getString("experience_years"));
+
+                            if(data.getString("is_fulltime").matches("1")){
+                                is_exp_check="1";
+                                check_expirience.setChecked(true);
+                            } else {
+                                is_exp_check="0";
+                                check_expirience.setChecked(false);
+                            }
+
+                            if(data.getString("is_PCC").matches("1")){
+                                is_pcc_check="1";
+                                check_pcc.setChecked(true);
+                            } else {
+                                is_pcc_check="0";
+                                check_pcc.setChecked(false);
+                            }
 
                             /*for (int j = 0; j < list1.size(); j++) {
                                 if (list1.get(j).Id.matches(data.getString("City_Id"))) {

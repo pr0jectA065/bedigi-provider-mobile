@@ -1,11 +1,17 @@
 package com.bedigi.partner.Fragment;
 
 
+import android.Manifest;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +19,9 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,6 +34,7 @@ import com.bedigi.partner.Preferences.AppPreferences;
 import com.bedigi.partner.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.JsonObject;
+import com.tuann.floatingactionbuttonexpandable.FloatingActionButtonExpandable;
 import com.wang.avi.AVLoadingIndicatorView;
 
 import org.json.JSONArray;
@@ -51,6 +60,7 @@ public class MyServices extends Fragment {
     Dialog dialog;
     Context context;
     FloatingActionButton add_service;
+    FloatingActionButtonExpandable fab;
 
     public MyServices() {
         // Required empty public constructor
@@ -70,8 +80,32 @@ public class MyServices extends Fragment {
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         layout = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
 
-        add_service = view.findViewById(R.id.add_service);
+        /*add_service = view.findViewById(R.id.add_service);
         add_service.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                add_service();
+            }
+        });
+*/
+        fab = view.findViewById(R.id.fab);
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                if (dy > 0) {
+                    fab.collapse(true);
+                } else {
+                    fab.expand(true);
+                }
+            }
+        });
+
+        fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 add_service();
@@ -90,7 +124,6 @@ public class MyServices extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
         getInfo();
 
     }
@@ -123,16 +156,30 @@ public class MyServices extends Fragment {
                             verticalAdapter = new PackageAdapter(data, context, new PackageAdapter.EventListener() {
                                 @Override
                                 public void onEvent(String type, int pos) {
-                                    try {
 
-                                        Intent intent = new Intent(context,AddService.class);
-                                        intent.putExtra("type","update");
-                                        intent.putExtra("json",arr.getJSONObject(pos).toString());
-                                        startActivity(intent);
+                                    if(type.matches("1")){
+                                        try {
+                                            Intent intent = new Intent(context,AddService.class);
+                                            intent.putExtra("type","update");
+                                            intent.putExtra("json",arr.getJSONObject(pos).toString());
+                                            startActivity(intent);
+                                        }catch (Exception e){
+                                            e.printStackTrace();
+                                        }
+                                    } else if(type.matches("2")){
+                                        try{
 
-                                    }catch (Exception e){
-                                        e.printStackTrace();
+                                            if(!(arr.getJSONObject(pos).getString("image").matches(""))){
+
+
+                                            }
+
+                                        } catch (Exception e){
+                                            e.printStackTrace();
+                                        }
+
                                     }
+
                                 }
                             });
 
