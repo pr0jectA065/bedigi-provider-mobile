@@ -7,7 +7,7 @@
 
     <!-- TODO: Update blank fragment layout -->
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -17,7 +17,13 @@
             android:layout_height="match_parent"
             android:layout_margin="@dimen/dp_8"/>
 
-    </LinearLayout>
+        <com.bedigi.partner.Common.GifImageView
+            android:id="@+id/GifImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true" />
+
+    </RelativeLayout>
 
 
 

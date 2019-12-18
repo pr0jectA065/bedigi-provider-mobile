@@ -41,6 +41,9 @@ public interface RetrofitAPIInterface {
     @GET("provider/addtimeslot/provider_id/{provider_id}")
     Call<JsonObject> addtimeslot(@Path("provider_id") String provider_id);
 
+    @GET("provider/follow/provider_id/{provider_id}")
+    Call<JsonObject> followList(@Path("provider_id") String provider_id);
+
     @GET("services/list")
     Call<JsonObject> serviceList();
 

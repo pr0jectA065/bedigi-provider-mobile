@@ -19,8 +19,8 @@ android {
         applicationId "com.bedigi.partner"
         minSdkVersion 22
         targetSdkVersion 29
-        versionCode 6
-        versionName "1.05"
+        versionCode 8
+        versionName "1.07"
         multiDexEnabled true
         manifestPlaceholders = [
                 onesignal_app_id               : 'b1e732ef-ffed-41bd-b3ba-d7c96ba89210',
