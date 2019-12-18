@@ -55,7 +55,7 @@ public class AddService extends AppCompatActivity {
     EditText price,sellprice,description,no_of_hours,service_name;
     CircularProgressButton save;
     AppPreferences appPreferences;
-    ImageButton image;
+    ImageView image;
     String filename, picturePath, encodedImage;
 
     String type = "",service_provider_id="";
@@ -146,7 +146,7 @@ public class AddService extends AppCompatActivity {
         jsonObject.addProperty("sellprice", sellprice.getText().toString().trim());
         jsonObject.addProperty("description", description.getText().toString().trim());
         jsonObject.addProperty("no_of_hours", no_of_hours.getText().toString().trim());
-        jsonObject.addProperty("image", encodedImage);
+        jsonObject.addProperty("service_image", encodedImage);
         jsonObject.addProperty("status", "1");
 
         try {
@@ -285,7 +285,7 @@ public class AddService extends AppCompatActivity {
         jsonObject.addProperty("sellprice", sellprice.getText().toString().trim());
         jsonObject.addProperty("description", description.getText().toString().trim());
         jsonObject.addProperty("no_of_hours", no_of_hours.getText().toString().trim());
-        jsonObject.addProperty("image", encodedImage);
+        jsonObject.addProperty("service_image", encodedImage);
         jsonObject.addProperty("status", "1");
 
         try {

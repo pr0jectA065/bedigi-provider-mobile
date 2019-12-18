@@ -30,7 +30,7 @@ public class Login extends AppCompatActivity {
     ImageButton back;
     AppPreferences appPreferences;
     String android_id="";
-    EditText username_et;
+    EditText username_et,referral_code;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +40,7 @@ public class Login extends AppCompatActivity {
         appPreferences=new AppPreferences(Login.this);
         login=(CircularProgressButton)findViewById(R.id.login);
         username_et=(EditText)findViewById(R.id.username_et) ;
+        referral_code=(EditText)findViewById(R.id.referral_code) ;
 
         back = findViewById(R.id.back);
         back.setOnClickListener(new View.OnClickListener() {

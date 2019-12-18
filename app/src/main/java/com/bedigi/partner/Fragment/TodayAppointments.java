@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.bedigi.partner.API.RetrofitAPI;
 import com.bedigi.partner.Adapter.HistoryAdapter;
+import com.bedigi.partner.Common.GifImageView;
 import com.bedigi.partner.Model.HistoryModel;
 import com.bedigi.partner.Preferences.AppPreferences;
 import com.bedigi.partner.R;
@@ -47,6 +48,7 @@ public class TodayAppointments extends Fragment {
     List<HistoryModel> list;
     HistoryAdapter verticalAdapter;
     Dialog dialog;
+    GifImageView gifImageView;
 
     public TodayAppointments() {
         // Required empty public constructor
@@ -63,6 +65,9 @@ public class TodayAppointments extends Fragment {
         recycler_view = (RecyclerView) view.findViewById(R.id.recycler_view);
         layout = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
 
+        gifImageView = (GifImageView) view.findViewById(R.id.GifImageView);
+        gifImageView.setGifImageResource(R.drawable.no_data_gif);
+
         getTodayAppointments();
 
         return view;
@@ -75,7 +80,7 @@ public class TodayAppointments extends Fragment {
         dialog.setContentView(R.layout.dialog_layout);
         dialog.setCancelable(false);
         AVLoadingIndicatorView progressView = (AVLoadingIndicatorView) dialog.findViewById(R.id.progressView);
-        dialog.show();
+        //dialog.show();
 
         try {
             Call<JsonObject> d = RetrofitAPI.getInstance().getApi().todayhistoryList(appPreferences.getId());
@@ -107,6 +112,9 @@ public class TodayAppointments extends Fragment {
 
                         if (obj.getString("status").matches("true")) {
 
+                            gifImageView.setVisibility(View.GONE);
+                            recycler_view.setVisibility(View.VISIBLE);
+
                             for (int i = 0; i < arr.length(); i++) {
                                 list.add(new HistoryModel(arr.getJSONObject(i).getString("appointment_id"),
                                         arr.getJSONObject(i).getString("user_name"),
@@ -129,8 +137,10 @@ public class TodayAppointments extends Fragment {
                             recycler_view.setAdapter(verticalAdapter);
 
                         } else {
-                            Toasty.error(context, "No Appointments found",
-                                    Toast.LENGTH_LONG).show();
+                           /* Toasty.error(context, "No Appointments found",
+                                    Toast.LENGTH_LONG).show();*/
+                            gifImageView.setVisibility(View.VISIBLE);
+                            recycler_view.setVisibility(View.GONE);
                         }
 
                     } catch (Exception e) {
@@ -170,6 +180,7 @@ public class TodayAppointments extends Fragment {
                 @Override
                 public void onResponse(Call<JsonObject> call, retrofit2.Response<JsonObject> response) {
                     try {
+                        dialog.dismiss();
                         JSONObject obj = new JSONObject(response.body().toString());
                         //JSONArray arr = obj.getJSONArray("data");
 
@@ -184,17 +195,20 @@ public class TodayAppointments extends Fragment {
 
                     } catch (Exception e) {
                         e.printStackTrace();
+                        dialog.dismiss();
                     }
                 }
 
                 @Override
                 public void onFailure(Call<JsonObject> call, Throwable t) {
                     Log.e("re", "" + t.toString());
+                    dialog.dismiss();
                 }
             });
 
         } catch (Exception e) {
             e.printStackTrace();
+            dialog.dismiss();
         }
     }
 

@@ -6,9 +6,14 @@ import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
+import okhttp3.Credentials;
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -30,8 +35,8 @@ public class RetrofitAPI {
                 .create();
 
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        //HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        //interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 //        httpClient.addInterceptor(new Interceptor() {
 //            @Override
 //            public Response intercept(Interceptor.Chain chain) throws IOException {
@@ -52,7 +57,7 @@ public class RetrofitAPI {
 
         httpClient.connectTimeout(60, TimeUnit.SECONDS);
         httpClient.readTimeout(60, TimeUnit.SECONDS);
-        httpClient.addInterceptor(interceptor);
+        httpClient.addInterceptor(new BasicAuthInterceptor("helper", "36931"));
 
         final OkHttpClient okHttpClient = httpClient.build();
 
@@ -79,4 +84,23 @@ public class RetrofitAPI {
         }
         return retrofitAPI;
     }
+
+    public class BasicAuthInterceptor implements Interceptor {
+
+        private String credentials;
+
+        public BasicAuthInterceptor(String user, String password) {
+            this.credentials = Credentials.basic(user, password);
+        }
+
+        @Override
+        public Response intercept(Chain chain) throws IOException {
+            Request request = chain.request();
+            Request authenticatedRequest = request.newBuilder()
+                    .header("Authorization", credentials).build();
+            return chain.proceed(authenticatedRequest);
+        }
+
+    }
+
 }

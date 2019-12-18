@@ -25,6 +25,7 @@ import androidx.appcompat.app.AlertDialog
 import com.bedigi.partner.Fragment.Home
 import com.bedigi.partner.Fragment.MyServices
 import com.bedigi.partner.Fragment.Profile
+import com.bedigi.partner.Fragment.Profile_home
 import com.bedigi.partner.Preferences.AppPreferences
 import com.bedigi.partner.Preferences.Utilities
 import com.bedigi.partner.R
@@ -72,7 +73,7 @@ class MainActivity : AppCompatActivity() {
                 fragmentTransaction!!.commit()
             } else if (it == 2) {
                 fragmentTransaction = fragmentManager!!.beginTransaction()
-                fragment = Profile()
+                fragment = Profile_home()
                 fragmentTransaction!!.replace(R.id.main_container, fragment!!)
                 fragmentTransaction!!.commit()
             }
@@ -146,7 +147,7 @@ class MainActivity : AppCompatActivity() {
                     builder.setTitle(Html.fromHtml("<b>Logout</b>"))
                     builder.setMessage("Are you sure you want to logout?")
                     builder.setPositiveButton("OK", DialogInterface.OnClickListener { dialogInterface, i ->
-                        //appPrefs.RemoveAllSharedPreference()
+                        appPrefs!!.RemoveAllSharedPreference()
                         //OneSignal.clearOneSignalNotifications();
                         Toast.makeText(this@MainActivity, "Logout successfully", Toast.LENGTH_SHORT).show()
                         val mainIntent = Intent(this@MainActivity, Login::class.java)

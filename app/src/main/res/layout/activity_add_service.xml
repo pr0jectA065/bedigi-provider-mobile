@@ -16,7 +16,7 @@
         app:popupTheme="@style/AppTheme.PopupOverlay"
         app:titleTextAppearance="@style/Toolbar.TitleText" />
 
-    <ImageButton
+    <ImageView
         android:id="@+id/image"
         android:background="@android:color/transparent"
         android:layout_width="100dp"
