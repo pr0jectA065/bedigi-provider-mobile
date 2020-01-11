@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Booked time slot"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:layout_marginTop="@dimen/dp_16"
+        android:layout_marginStart="@dimen/dp_16"
+        android:textSize="@dimen/sp_16"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_margin="@dimen/dp_10"
+        android:padding="@dimen/dp_5">
+
+        <CheckBox
+            android:clickable="false"
+            android:id="@+id/early_morning"
+            android:text="Early Morning (before 9am)"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <CheckBox
+            android:clickable="false"
+            android:id="@+id/morning"
+            android:text="Morning (9am to 12pm)"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <CheckBox
+            android:clickable="false"
+            android:id="@+id/afternoon"
+            android:text="Afternoon (12pm to 3 pm)"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <CheckBox
+            android:clickable="false"
+            android:id="@+id/late_afternoon"
+            android:text="Late Afternoon (3pm to 6pm)"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <CheckBox
+            android:clickable="false"
+            android:id="@+id/evening"
+            android:text="Evening (after 6 pm)"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/ok_dalog"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:text="OK"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="@dimen/dp_16"/>
+
+</LinearLayout>

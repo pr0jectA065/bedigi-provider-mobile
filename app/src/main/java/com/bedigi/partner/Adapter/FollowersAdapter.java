@@ -61,6 +61,8 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.MyVi
 
         if(!(verticalList.get(position).user_pic.matches(""))){
             Picasso.with(context).load(verticalList.get(position).user_pic).into(holder.imageView);
+        }else{
+            holder.imageView.setImageResource(R.drawable.user_image);
         }
 
 

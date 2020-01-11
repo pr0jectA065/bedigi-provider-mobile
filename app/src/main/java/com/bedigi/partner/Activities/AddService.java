@@ -6,6 +6,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.Manifest;
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -20,6 +21,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -37,7 +39,10 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import br.com.simplepass.loading_button_lib.customViews.CircularProgressButton;
@@ -61,6 +66,11 @@ public class AddService extends AppCompatActivity {
     String type = "",service_provider_id="";
     JSONObject obj;
 
+    EditText start_date,end_date;
+    int mYear;
+    int mMonth;
+    int mDay;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,6 +92,8 @@ public class AddService extends AppCompatActivity {
         no_of_hours = findViewById(R.id.no_of_hours);
         service_name = findViewById(R.id.service_name);
         image = findViewById(R.id.image);
+        start_date = findViewById(R.id.start_date);
+        end_date = findViewById(R.id.end_date);
 
         save = findViewById(R.id.save);
 
@@ -132,6 +144,79 @@ public class AddService extends AppCompatActivity {
             }
         });
 
+        start_date.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                final Calendar c = Calendar.getInstance();
+                mYear = c.get(Calendar.YEAR);
+                mMonth = c.get(Calendar.MONTH);
+                mDay = c.get(Calendar.DAY_OF_MONTH);
+
+                DatePickerDialog datePickerDialog = new DatePickerDialog(AddService.this,
+                        new DatePickerDialog.OnDateSetListener() {
+
+                            @Override
+                            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+
+                                String monthConverted = "" + (monthOfYear + 1);
+                                if (Integer.parseInt(monthConverted) < 10) {
+                                    monthConverted = "0" + monthConverted;
+                                }
+
+                                String dayConverted = "" + (dayOfMonth);
+                                if (dayOfMonth < 10) {
+                                    dayConverted = "0" + dayConverted;
+                                }
+
+                                String Seldate = year + "-" + monthConverted + "-" + dayConverted;
+                                start_date.setText(Seldate);
+
+                            }
+                        }, mYear, mMonth, mDay);
+
+                datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
+                datePickerDialog.show();
+            }
+        });
+
+        end_date.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                final Calendar c = Calendar.getInstance();
+                mYear = c.get(Calendar.YEAR);
+                mMonth = c.get(Calendar.MONTH);
+                mDay = c.get(Calendar.DAY_OF_MONTH);
+
+                DatePickerDialog datePickerDialog = new DatePickerDialog(AddService.this,
+                        new DatePickerDialog.OnDateSetListener() {
+
+                            @Override
+                            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+
+                                String monthConverted = "" + (monthOfYear + 1);
+                                if (Integer.parseInt(monthConverted) < 10) {
+                                    monthConverted = "0" + monthConverted;
+                                }
+
+                                String dayConverted = "" + (dayOfMonth);
+                                if (dayOfMonth < 10) {
+                                    dayConverted = "0" + dayConverted;
+                                }
+
+                                String Seldate = year + "-" + monthConverted + "-" + dayConverted;
+                                end_date.setText(Seldate);
+
+                            }
+                        }, mYear, mMonth, mDay);
+
+                datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
+                datePickerDialog.show();
+
+            }
+        });
+
         type = getIntent().getStringExtra("type");
 
         gethomeslider();
@@ -146,6 +231,8 @@ public class AddService extends AppCompatActivity {
         jsonObject.addProperty("sellprice", sellprice.getText().toString().trim());
         jsonObject.addProperty("description", description.getText().toString().trim());
         jsonObject.addProperty("no_of_hours", no_of_hours.getText().toString().trim());
+        jsonObject.addProperty("start_date", start_date.getText().toString().trim());
+        jsonObject.addProperty("end_date", end_date.getText().toString().trim());
         jsonObject.addProperty("service_image", encodedImage);
         jsonObject.addProperty("status", "1");
 
@@ -285,6 +372,8 @@ public class AddService extends AppCompatActivity {
         jsonObject.addProperty("sellprice", sellprice.getText().toString().trim());
         jsonObject.addProperty("description", description.getText().toString().trim());
         jsonObject.addProperty("no_of_hours", no_of_hours.getText().toString().trim());
+        jsonObject.addProperty("start_date", start_date.getText().toString().trim());
+        jsonObject.addProperty("end_date", end_date.getText().toString().trim());
         jsonObject.addProperty("service_image", encodedImage);
         jsonObject.addProperty("status", "1");
 
@@ -373,6 +462,8 @@ public class AddService extends AppCompatActivity {
                                 description.setText(obj.getString("description"));
                                 no_of_hours.setText(obj.getString("no_of_hours"));
                                 service_name.setText(obj.getString("service_name"));
+                                start_date.setText(obj.getString("start_date"));
+                                end_date.setText(obj.getString("end_date"));
                                 service_provider_id = obj.getString("service_provider_id");
 
                                 service_id = obj.getString("service_id");

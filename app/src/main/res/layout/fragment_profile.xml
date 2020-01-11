@@ -262,6 +262,8 @@
 
 
                                 <RelativeLayout
+                                    android:visibility="gone"
+                                    android:id="@+id/rl_city"
                                     android:layout_width="0dp"
                                     android:layout_weight="1"
                                     android:layout_height="wrap_content"
@@ -272,11 +274,44 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="30dp"
                                         style="@style/Widget.AppCompat.DropDownItem.Spinner"
-                                        android:visibility="gone"
                                         android:id="@+id/city"/>
                                 </RelativeLayout>
 
                             </LinearLayout>
+
+                            <RelativeLayout
+                                android:visibility="gone"
+                                android:id="@+id/rl_locality"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="8dp"
+                                android:layout_marginTop="@dimen/dp_10"
+                                android:background="#f0efef">
+
+                                <TextView
+                                    android:id="@+id/spinnerTV"
+                                    android:gravity="center_vertical"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="30dp"
+                                    android:drawableEnd="@drawable/ic_arrow_drop_down"
+                                    android:drawableTint="@color/grey"
+                                    android:text="Select Locality"
+                                    android:textColor="@color/black" />
+
+                            </RelativeLayout>
+
+                            <TextView
+                                android:id="@+id/selected_localities"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/dp_5" />
+
+                            <TextView
+                                android:visibility="gone"
+                                android:id="@+id/selected_localities_id"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/dp_5" />
 
                             <br.com.simplepass.loading_button_lib.customViews.CircularProgressButton
                                 android:id="@+id/signUp"

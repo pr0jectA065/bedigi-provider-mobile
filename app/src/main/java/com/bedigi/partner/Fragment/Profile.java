@@ -2,9 +2,11 @@ package com.bedigi.partner.Fragment;
 
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -37,13 +39,16 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bedigi.partner.API.RetrofitAPI;
 import com.bedigi.partner.Activities.AddService;
 import com.bedigi.partner.Adapter.PackageAdapter;
+import com.bedigi.partner.Model.Locality_Model;
 import com.bedigi.partner.Model.PackageData;
 import com.bedigi.partner.Model.StateCityListModel;
 import com.bedigi.partner.Model.TimeSlotModel;
@@ -82,7 +87,7 @@ import static com.bedigi.partner.Preferences.Utilities.getImageUrlWithAuthority;
 public class Profile extends Fragment {
 
     Context context;
-    EditText et_dob, et_zipcode,et_expirience;
+    EditText et_dob, et_zipcode, et_expirience;
     Calendar c;
     int year, month, day;
     ImageButton uploadImage;
@@ -105,22 +110,30 @@ public class Profile extends Fragment {
     String sex_sel = "";
 
     ArrayAdapter<StateCityListModel> stateadapter;
-    CheckBox check_pcc,check_expirience;
-    String is_pcc_check="0",is_exp_check="0";
+    CheckBox check_pcc, check_expirience;
+    String is_pcc_check = "0", is_exp_check = "0";
 
-    Button bt_profile,bt_visiting;
-    ExpandableLayout exl_basic_info,exl_visiting;
+    Button bt_profile, bt_visiting;
+    ExpandableLayout exl_basic_info, exl_visiting;
 
     SwitchCompat is_available;
     LinearLayout timeLL;
-    CheckBox early_morning,morning,afternoon,late_afternoon,evening;
-    String is_available_str ="",early_morning_str="",morning_str="",afternoon_str="",late_afternoon_str="",evening_str="";
+    CheckBox early_morning, morning, afternoon, late_afternoon, evening;
+    String is_available_str = "", early_morning_str = "", morning_str = "", afternoon_str = "", late_afternoon_str = "", evening_str = "";
     Button saveTimeSlot;
 
     PresetRadioGroup mSetDurationPresetRadioGroup;
-    String daySel = "mon",timeslot_id;
-    List<TimeSlotModel> timeList ;
+    String daySel = "mon", timeslot_id;
+    List<TimeSlotModel> timeList;
     JSONArray time_slot_arr;
+
+    TextView spinnerTV, selected_localities, selected_localities_id;
+    boolean[] bool_locality_checked;
+    String[] str_locality;
+
+    List<Locality_Model> list_localities;
+    RelativeLayout rl_city, rl_locality;
+    String[] temp;
 
     public Profile() {
         // Required empty public constructor
@@ -139,6 +152,11 @@ public class Profile extends Fragment {
         appPreferences = new AppPreferences(context);
         signUp = (CircularProgressButton) view.findViewById(R.id.signUp);
 
+        rl_city = view.findViewById(R.id.rl_city);
+        rl_locality = view.findViewById(R.id.rl_locality);
+        spinnerTV = view.findViewById(R.id.spinnerTV);
+        selected_localities = view.findViewById(R.id.selected_localities);
+        selected_localities_id = view.findViewById(R.id.selected_localities_id);
         saveTimeSlot = view.findViewById(R.id.saveTimeSlot);
         is_available = view.findViewById(R.id.is_available);
         timeLL = view.findViewById(R.id.timeLL);
@@ -177,13 +195,14 @@ public class Profile extends Fragment {
         city = (Spinner) view.findViewById(R.id.city);
         list = new ArrayList<>();
         list1 = new ArrayList<>();
+        list_localities = new ArrayList<>();
 
         check_pcc.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if(b){
+                if (b) {
                     is_pcc_check = "1";
-                } else{
+                } else {
                     is_pcc_check = "0";
                 }
                 check_pcc.setChecked(b);
@@ -194,9 +213,9 @@ public class Profile extends Fragment {
         check_expirience.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if(b){
+                if (b) {
                     is_exp_check = "1";
-                } else{
+                } else {
                     is_exp_check = "0";
                 }
                 check_expirience.setChecked(b);
@@ -228,10 +247,10 @@ public class Profile extends Fragment {
                 Log.e("state_selected", state_selected);
                 if (!(state_selected.matches("0"))) {
                     list1.clear();
-                    city.setVisibility(View.VISIBLE);
+                    rl_city.setVisibility(View.VISIBLE);
                     getCity(state_selected);
                 } else {
-                    city.setVisibility(View.GONE);
+                    rl_city.setVisibility(View.GONE);
                 }
 
             }
@@ -248,6 +267,13 @@ public class Profile extends Fragment {
                 //city_selected = String.valueOf((StateCityListModel) arg0.getAdapter().getItem(arg2));
                 city_selected = list1.get(city.getSelectedItemPosition()).Id;
                 Log.e("city_selected", city_selected);
+                if (!(city_selected.matches("0"))) {
+                    list_localities.clear();
+                    rl_locality.setVisibility(View.VISIBLE);
+                    getLocality(city_selected);
+                } else {
+                    rl_locality.setVisibility(View.GONE);
+                }
             }
 
             @Override
@@ -340,10 +366,10 @@ public class Profile extends Fragment {
         is_available.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if(b){
+                if (b) {
                     timeLL.setVisibility(View.VISIBLE);
                     is_available_str = "1";
-                }else{
+                } else {
                     timeLL.setVisibility(View.GONE);
                     //is_available_str ="",early_morning_str="",morning_str="",late_afternoon_str="",evening_str=""
                     is_available_str = "0";
@@ -359,10 +385,10 @@ public class Profile extends Fragment {
         early_morning.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if(b){
-                    early_morning_str="1";
-                }else{
-                    early_morning_str="0";
+                if (b) {
+                    early_morning_str = "1";
+                } else {
+                    early_morning_str = "0";
                 }
             }
         });
@@ -370,10 +396,10 @@ public class Profile extends Fragment {
         morning.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if(b){
-                    morning_str="1";
-                }else{
-                    morning_str="0";
+                if (b) {
+                    morning_str = "1";
+                } else {
+                    morning_str = "0";
                 }
             }
         });
@@ -381,10 +407,10 @@ public class Profile extends Fragment {
         afternoon.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if(b){
-                    afternoon_str="1";
-                }else{
-                    afternoon_str="0";
+                if (b) {
+                    afternoon_str = "1";
+                } else {
+                    afternoon_str = "0";
                 }
             }
         });
@@ -392,10 +418,10 @@ public class Profile extends Fragment {
         late_afternoon.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if(b){
-                    late_afternoon_str="1";
-                }else{
-                    late_afternoon_str="0";
+                if (b) {
+                    late_afternoon_str = "1";
+                } else {
+                    late_afternoon_str = "0";
                 }
             }
         });
@@ -403,10 +429,10 @@ public class Profile extends Fragment {
         evening.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if(b){
-                    evening_str="1";
-                }else{
-                    evening_str="0";
+                if (b) {
+                    evening_str = "1";
+                } else {
+                    evening_str = "0";
                 }
             }
         });
@@ -414,7 +440,7 @@ public class Profile extends Fragment {
         saveTimeSlot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                saveTimeSlot(daySel,timeslot_id);
+                saveTimeSlot(daySel, timeslot_id);
             }
         });
 
@@ -436,7 +462,7 @@ public class Profile extends Fragment {
             @Override
             public void onCheckedChanged(View radioGroup, View radioButton, boolean isChecked, int checkedId) {
 
-                saveTimeSlot(daySel,timeslot_id);
+                saveTimeSlot(daySel, timeslot_id);
 
                 if (checkedId == R.id.mon) {
                     daySel = "mon";
@@ -454,57 +480,57 @@ public class Profile extends Fragment {
                     daySel = "sun";
                 }
 
-                if(time_slot_arr.length()>0){
-                    for(int i=0;i<time_slot_arr.length();i++){
+                if (time_slot_arr.length() > 0) {
+                    for (int i = 0; i < time_slot_arr.length(); i++) {
                         try {
-                            if(time_slot_arr.getJSONObject(i).getString("day").matches(daySel)){
+                            if (time_slot_arr.getJSONObject(i).getString("day").matches(daySel)) {
 
                                 timeslot_id = time_slot_arr.getJSONObject(i).getString("timeslot_id");
 
-                                if(time_slot_arr.getJSONObject(i).getString("is_available").matches("0")){
+                                if (time_slot_arr.getJSONObject(i).getString("is_available").matches("0")) {
                                     is_available.setChecked(false);
                                     is_available_str = "0";
-                                }else{
+                                } else {
                                     is_available.setChecked(true);
                                     is_available_str = "1";
                                 }
 
-                                if(is_available.isChecked()){
+                                if (is_available.isChecked()) {
                                     timeLL.setVisibility(View.VISIBLE);
                                     early_morning_str = time_slot_arr.getJSONObject(i).getString("early_morning");
                                     morning_str = time_slot_arr.getJSONObject(i).getString("morning");
                                     afternoon_str = time_slot_arr.getJSONObject(i).getString("afternoon");
                                     late_afternoon_str = time_slot_arr.getJSONObject(i).getString("late_afternoon");
                                     evening_str = time_slot_arr.getJSONObject(i).getString("evening");
-                                }else{
+                                } else {
                                     timeLL.setVisibility(View.GONE);
                                 }
 
-                                if(early_morning_str.matches("0")){
+                                if (early_morning_str.matches("0")) {
                                     early_morning.setChecked(false);
                                 } else {
                                     early_morning.setChecked(true);
                                 }
 
-                                if(morning_str.matches("0")){
+                                if (morning_str.matches("0")) {
                                     morning.setChecked(false);
                                 } else {
                                     morning.setChecked(true);
                                 }
 
-                                if(afternoon_str.matches("0")){
+                                if (afternoon_str.matches("0")) {
                                     afternoon.setChecked(false);
                                 } else {
                                     afternoon.setChecked(true);
                                 }
 
-                                if(late_afternoon_str.matches("0")){
+                                if (late_afternoon_str.matches("0")) {
                                     late_afternoon.setChecked(false);
                                 } else {
                                     late_afternoon.setChecked(true);
                                 }
 
-                                if(evening_str.matches("0")){
+                                if (evening_str.matches("0")) {
                                     evening.setChecked(false);
                                 } else {
                                     evening.setChecked(true);
@@ -522,10 +548,81 @@ public class Profile extends Fragment {
             }
         });
 
+        selected_localities.setVisibility(View.GONE);
+        selected_localities_id.setVisibility(View.GONE);
+
+        spinnerTV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (list_localities.size() > 0) {
+                    rl_locality.setVisibility(View.VISIBLE);
+
+                    temp = selected_localities_id.getText().toString().trim().split(",");
+
+                    for(int i=0;i<list_localities.size();i++){
+                        for(int j=0;j<temp.length;j++){
+                            if(list_localities.get(i).Id.matches(temp[j])){
+                                bool_locality_checked[i] = true;
+                            }
+                        }
+
+                    }
+
+                    Log.e("bool_locality_checked",bool_locality_checked.toString());
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    //final List<String> listt = new ArrayList<>();
+
+                    for (int i = 0; i < list_localities.size(); i++) {
+                        //bool_speciality_checked[i] = false;
+                        str_locality[i] = list_localities.get(i).Name;
+                    }
+
+                    Log.e("bool_locality_checked",bool_locality_checked.toString());
+
+                    builder.setMultiChoiceItems(str_locality, bool_locality_checked, new DialogInterface.OnMultiChoiceClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                            bool_locality_checked[which] = isChecked;
+                            String currentItem = list_localities.get(which).Id;
+                            //Toast.makeText(context, currentItem + " " + isChecked, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    builder.setCancelable(true);
+                    builder.setTitle("Select Locality");
+                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            selected_localities.setVisibility(View.VISIBLE);
+                            selected_localities.setText("");
+                            selected_localities_id.setText("");
+                            for (int i = 0; i < bool_locality_checked.length; i++) {
+                                boolean checked = bool_locality_checked[i];
+                                if (checked) {
+                                    selected_localities.setText(selected_localities.getText() +
+                                            list_localities.get(i).Name + ",");
+                                    selected_localities_id.setText(selected_localities_id.getText() +
+                                            list_localities.get(i).Id + ",");
+                                }
+                            }
+                        }
+                    });
+
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+
+
+                } else {
+                    rl_locality.setVisibility(View.GONE);
+                }
+            }
+        });
+
         return view;
     }
 
-    private void getTimeSlot(){
+    private void getTimeSlot() {
         dialog = new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
@@ -565,24 +662,24 @@ public class Profile extends Fragment {
 
                             timeslot_id = time_slot_arr.getJSONObject(0).getString("timeslot_id");
 
-                            if(time_slot_arr.length()>0){
-                                for(int i=0;i<time_slot_arr.length();i++){
+                            if (time_slot_arr.length() > 0) {
+                                for (int i = 0; i < time_slot_arr.length(); i++) {
                                     try {
-                                        if(time_slot_arr.getJSONObject(i).getString("day").matches(daySel)){
+                                        if (time_slot_arr.getJSONObject(i).getString("day").matches(daySel)) {
 
                                             timeslot_id = time_slot_arr.getJSONObject(i).getString("timeslot_id");
 
-                                            if(time_slot_arr.getJSONObject(i).getString("is_available").matches("0")){
+                                            if (time_slot_arr.getJSONObject(i).getString("is_available").matches("0")) {
                                                 is_available.setChecked(false);
                                                 is_available_str = "0";
-                                            }else{
+                                            } else {
                                                 is_available.setChecked(true);
                                                 is_available_str = "1";
                                             }
 
-                                            if(is_available.isChecked()){
+                                            if (is_available.isChecked()) {
                                                 timeLL.setVisibility(View.VISIBLE);
-                                            }else{
+                                            } else {
                                                 timeLL.setVisibility(View.GONE);
                                                 early_morning_str = time_slot_arr.getJSONObject(i).getString("early_morning");
                                                 morning_str = time_slot_arr.getJSONObject(i).getString("morning");
@@ -591,31 +688,31 @@ public class Profile extends Fragment {
                                                 evening_str = time_slot_arr.getJSONObject(i).getString("evening");
                                             }
 
-                                            if(early_morning_str.matches("0")){
+                                            if (early_morning_str.matches("0")) {
                                                 early_morning.setChecked(false);
                                             } else {
                                                 early_morning.setChecked(true);
                                             }
 
-                                            if(morning_str.matches("0")){
+                                            if (morning_str.matches("0")) {
                                                 morning.setChecked(false);
                                             } else {
                                                 morning.setChecked(true);
                                             }
 
-                                            if(afternoon_str.matches("0")){
+                                            if (afternoon_str.matches("0")) {
                                                 afternoon.setChecked(false);
                                             } else {
                                                 afternoon.setChecked(true);
                                             }
 
-                                            if(late_afternoon_str.matches("0")){
+                                            if (late_afternoon_str.matches("0")) {
                                                 late_afternoon.setChecked(false);
                                             } else {
                                                 late_afternoon.setChecked(true);
                                             }
 
-                                            if(evening_str.matches("0")){
+                                            if (evening_str.matches("0")) {
                                                 evening.setChecked(false);
                                             } else {
                                                 evening.setChecked(true);
@@ -651,7 +748,7 @@ public class Profile extends Fragment {
         }
     }
 
-    private void saveTimeSlot(String day,String timeslot_id) {
+    private void saveTimeSlot(String day, String timeslot_id) {
         dialog = new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
@@ -667,7 +764,7 @@ public class Profile extends Fragment {
             jsonObject.addProperty("timeslot_id", timeslot_id);
             jsonObject.addProperty("day", day);
             jsonObject.addProperty("is_available", is_available_str);
-            jsonObject.addProperty("early_morning",early_morning_str);
+            jsonObject.addProperty("early_morning", early_morning_str);
             jsonObject.addProperty("morning", morning_str);
             jsonObject.addProperty("afternoon", afternoon_str);
             jsonObject.addProperty("late_afternoon", late_afternoon_str);
@@ -713,7 +810,7 @@ public class Profile extends Fragment {
 
         } catch (Exception e) {
             dialog.dismiss();
-           // signUp.stopAnimation();
+            // signUp.stopAnimation();
             //signUp.revertAnimation();
             e.printStackTrace();
         }
@@ -739,6 +836,7 @@ public class Profile extends Fragment {
             jsonObject.addProperty("dob", et_dob.getText().toString().trim());
             jsonObject.addProperty("city_id", city_selected);
             jsonObject.addProperty("state_id", state_selected);
+            jsonObject.addProperty("locality_ids", selected_localities_id.getText().toString().trim().replaceAll(",$", ""));
             jsonObject.addProperty("is_PCC", is_pcc_check);
             jsonObject.addProperty("is_fulltime", is_exp_check);
             jsonObject.addProperty("zipcode", et_zipcode.getText().toString().trim());
@@ -786,6 +884,78 @@ public class Profile extends Fragment {
             dialog.dismiss();
             signUp.stopAnimation();
             signUp.revertAnimation();
+            e.printStackTrace();
+        }
+    }
+
+    private void getLocality(String city_id) {
+        dialog = new Dialog(context);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        dialog.setContentView(R.layout.dialog_layout);
+        dialog.setCancelable(false);
+        AVLoadingIndicatorView progressView = (AVLoadingIndicatorView) dialog.findViewById(R.id.progressView);
+        dialog.show();
+
+        try {
+            Call<JsonObject> d = RetrofitAPI.getInstance().getApi().getLocality(city_id);
+            d.enqueue(new Callback<JsonObject>() {
+                @Override
+                public void onResponse(Call<JsonObject> call, retrofit2.Response<JsonObject> response) {
+                    try {
+                        dialog.dismiss();
+                        JSONObject obj = new JSONObject(response.body().toString());
+
+                        JSONArray arr = obj.getJSONArray("data");
+                        Log.e("API", response.body().toString());
+
+                        if (obj.getString("status").matches("true")) {
+
+                            list_localities = new ArrayList<>();
+                            //list_localities.add(new Locality_Model("0", "Select Locality", ""));
+                            for (int i = 0; i < arr.length(); i++) {
+                                list_localities.add(new Locality_Model(arr.getJSONObject(i).getString("locality_id"),
+                                        arr.getJSONObject(i).getString("locality"),
+                                        arr.getJSONObject(i).getString("status")));
+                            }
+
+                            bool_locality_checked = new boolean[list_localities.size()];
+                            str_locality = new String[list_localities.size()];
+
+                            if (list_localities.size() > 0) {
+                                rl_locality.setVisibility(View.VISIBLE);
+                            } else {
+                                rl_locality.setVisibility(View.GONE);
+                            }
+
+                            /*if (!(city_selected.matches(""))) {
+                                for (int j = 0; j < list1.size(); j++) {
+                                    if (list1.get(j).Id.matches(city_selected)) {
+                                        city.setSelection(j);
+                                    }
+                                }
+                            }*/
+                        } else {
+                            rl_locality.setVisibility(View.GONE);
+                            dialog.dismiss();
+                            Toasty.error(context, obj.getString("message"), Toast.LENGTH_LONG).show();
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        dialog.dismiss();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<JsonObject> call, Throwable t) {
+                    dialog.dismiss();
+                    Log.e("re", "" + t.toString());
+                }
+            });
+
+        } catch (Exception e) {
+            dialog.dismiss();
             e.printStackTrace();
         }
     }
@@ -976,20 +1146,50 @@ public class Profile extends Fragment {
 
                             et_expirience.setText(data.getString("experience_years"));
 
-                            if(data.getString("is_fulltime").matches("1")){
-                                is_exp_check="1";
+                            if (data.getString("is_fulltime").matches("1")) {
+                                is_exp_check = "1";
                                 check_expirience.setChecked(true);
                             } else {
-                                is_exp_check="0";
+                                is_exp_check = "0";
                                 check_expirience.setChecked(false);
                             }
 
-                            if(data.getString("is_PCC").matches("1")){
-                                is_pcc_check="1";
+                            if (data.getString("is_PCC").matches("1")) {
+                                is_pcc_check = "1";
                                 check_pcc.setChecked(true);
                             } else {
-                                is_pcc_check="0";
+                                is_pcc_check = "0";
                                 check_pcc.setChecked(false);
+                            }
+
+                            JSONArray locality_arr = new JSONArray();
+                            locality_arr = data.getJSONArray("locality");
+
+                            if (locality_arr.length() > 0) {
+                                String sel = "", sel_id = "";
+                                selected_localities.setText("");
+                                selected_localities.setVisibility(View.VISIBLE);
+                                for (int i = 0; i < locality_arr.length(); i++) {
+                                    sel += "," +
+                                            locality_arr.getJSONObject(i).getString("locality");
+
+                                    sel_id += "," +
+                                            locality_arr.getJSONObject(i).getString("locality_id");
+                                }
+                                sel = sel.substring(1);
+                                sel_id = sel_id.substring(1);
+
+                                selected_localities.setText(sel);
+
+
+                                for(int i = 0; i < list_localities.size(); ++i){
+                                    bool_locality_checked[i] = false;
+                                }
+
+                                selected_localities_id.setText(sel_id);
+
+                            } else {
+                                selected_localities.setVisibility(View.GONE);
                             }
 
                             /*for (int j = 0; j < list1.size(); j++) {
