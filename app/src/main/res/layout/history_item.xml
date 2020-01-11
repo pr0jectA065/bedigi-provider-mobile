@@ -63,8 +63,9 @@
                     android:layout_weight="1"
                     android:drawablePadding="@dimen/dp_5"
                     android:drawableStart="@drawable/ic_date_time"
+                    android:textSize="@dimen/sp_12"
                     android:text="Date:"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/button_bg" />
 
             </LinearLayout>
 
@@ -82,7 +83,10 @@
                     android:drawablePadding="@dimen/dp_5"
                     android:drawableStart="@drawable/ic_lcoation"
                     android:text="Location"
-                    android:textColor="@color/black" />
+                    android:singleLine="true"
+                    android:maxLines="1"
+                    android:textSize="@dimen/sp_12"
+                    android:textColor="@color/button_bg" />
 
             </LinearLayout>
 
@@ -100,6 +104,7 @@
                     android:drawablePadding="@dimen/dp_5"
                     android:drawableStart="@drawable/ic_patient"
                     android:text="Patient Name"
+                    android:textSize="@dimen/sp_12"
                     android:textColor="@color/black" />
 
                 <ImageView
@@ -114,11 +119,12 @@
                     android:id="@+id/tvStatus"
                     android:layout_width="120dp"
                     android:layout_height="wrap_content"
-                    android:padding="@dimen/dp_2"
+                    android:padding="@dimen/dp_4"
                     android:text="Service Started"
                     android:gravity="center"
                     android:textStyle="bold"
                     android:textColor="@color/black"
+                    android:textSize="@dimen/sp_12"
                     android:background="@drawable/border"/>
 
             </LinearLayout>

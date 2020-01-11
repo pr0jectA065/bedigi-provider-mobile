@@ -35,6 +35,9 @@ public interface RetrofitAPIInterface {
     @GET("common/city/state_id/{state_id}/")
     Call<JsonObject> getCity(@Path("state_id") String state_id);
 
+    @GET("common/locality/city_id/{city_id}")
+    Call<JsonObject> getLocality(@Path("city_id") String city_id);
+
     @GET("provider/services/provider_id/{provider_id}")
     Call<JsonObject> services(@Path("provider_id") String provider_id);
 
