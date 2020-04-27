@@ -12,7 +12,7 @@ import com.bedigi.partner.R;
 
 public class PrivacyPolicy extends AppCompatActivity {
 
-    private String postUrl ="http://54.200.100.175/bedigi/home/privacy";
+    private String postUrl ="http://54.185.194.172/bedigi/home/privacy";
     private WebView webView;
 
     @Override

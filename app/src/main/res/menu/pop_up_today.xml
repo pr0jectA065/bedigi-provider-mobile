@@ -9,16 +9,4 @@
         android:id="@+id/reject"
         android:title="Reject" />
 
-    <item
-        android:id="@+id/start"
-        android:title="Start Service" />
-
-    <item
-        android:id="@+id/stop"
-        android:title="Stop Service" />
-
-    <item
-        android:id="@+id/hold"
-        android:title="Put on Hold" />
-
 </menu>

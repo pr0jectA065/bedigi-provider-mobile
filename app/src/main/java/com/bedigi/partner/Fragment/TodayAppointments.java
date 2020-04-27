@@ -96,21 +96,27 @@ public class TodayAppointments extends Fragment {
                         JSONObject obj = new JSONObject(response.body().toString());
                         final JSONArray arr = obj.getJSONArray("data");
                         list = new ArrayList<>();
-                        verticalAdapter = new HistoryAdapter(list, context, "today",new HistoryAdapter.EventListener() {
+                        verticalAdapter = new HistoryAdapter(list, context, "today", new HistoryAdapter.EventListener() {
                             @Override
                             public void onEvent(final String type, final String id, final String pos,
                                                 final String time, final String date) {
 
-                                if(type.matches("1")){
-                                    appointmentstatus("1",id);
-                                } else if(type.matches("3")){
-                                    appointmentstatus("3",id);
-                                } else if(type.matches("datetime")){
+                                if (type.matches("1")) {
+                                    appointmentstatus("1", id);
+                                } else if (type.matches("3")) {
+                                    appointmentstatus("3", id);
+                                } else if (type.matches("datetime")) {
                                     try {
                                         dateDialog(arr.get(Integer.parseInt(pos)).toString());
                                     } catch (JSONException e) {
                                         e.printStackTrace();
                                     }
+                                } else if (type.matches("100")) {
+                                    change_service_status("1",id);
+                                } else if (type.matches("101")) {
+                                    change_service_status("2",id);
+                                } else if (type.matches("102")) {
+                                    change_service_status("3",id);
                                 }
 
                                 //appointmentstatus(type,id);
@@ -126,7 +132,7 @@ public class TodayAppointments extends Fragment {
                             recycler_view.setVisibility(View.VISIBLE);
 
                             for (int i = 0; i < arr.length(); i++) {
-                                if(!(arr.getJSONObject(i).getString("status").matches("3"))){
+                                if (!(arr.getJSONObject(i).getString("status").matches("3"))) {
 
                                     list.add(new HistoryModel(arr.getJSONObject(i).getString("appointment_id"),
                                             arr.getJSONObject(i).getString("user_name"),
@@ -144,7 +150,8 @@ public class TodayAppointments extends Fragment {
                                             arr.getJSONObject(i).getString("provider_phone"),
                                             arr.getJSONObject(i).getString("address1"),
                                             arr.getJSONObject(i).getString("latitude"),
-                                            arr.getJSONObject(i).getString("longitude")));
+                                            arr.getJSONObject(i).getString("longitude"),
+                                            arr.getJSONObject(i).getString("service_status")));
 
                                 }
 
@@ -180,9 +187,60 @@ public class TodayAppointments extends Fragment {
 
     }
 
+    private void change_service_status(String status, String appointment_id) {
+        dialog = new Dialog(context);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        dialog.setContentView(R.layout.dialog_layout);
+        dialog.setCancelable(false);
+        AVLoadingIndicatorView progressView = (AVLoadingIndicatorView) dialog.findViewById(R.id.progressView);
+        //dialog.show();
+
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("service_status", status);
+
+        try {
+            Call<JsonObject> d = RetrofitAPI.getInstance().getApi().start_end_service(appointment_id, jsonObject);
+            d.enqueue(new Callback<JsonObject>() {
+                @Override
+                public void onResponse(Call<JsonObject> call, retrofit2.Response<JsonObject> response) {
+                    try {
+                        dialog.dismiss();
+                        JSONObject obj = new JSONObject(response.body().toString());
+                        //JSONArray arr = obj.getJSONArray("data");
+
+                        Log.e("API", response.body().toString());
+
+                        if (obj.getString("status").matches("true")) {
+                            //Toasty.success(context, obj.getString("message"), Toast.LENGTH_LONG).show();
+                            getTodayAppointments();
+
+                        } else {
+                            Toasty.error(context, obj.getString("message"), Toast.LENGTH_LONG).show();
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        dialog.dismiss();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<JsonObject> call, Throwable t) {
+                    Log.e("re", "" + t.toString());
+                    dialog.dismiss();
+                }
+            });
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            dialog.dismiss();
+        }
+    }
+
     private void dateDialog(String str) throws JSONException {
 
-        String early_morning_str="",morning_str="",afternoon_str="",late_afternoon_str="",evening_str="";
+        String early_morning_str = "", morning_str = "", afternoon_str = "", late_afternoon_str = "", evening_str = "";
 
         final Dialog dialog = new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -204,31 +262,31 @@ public class TodayAppointments extends Fragment {
         late_afternoon_str = obj.getString("late_afternoon");
         evening_str = obj.getString("evening");
 
-        if(early_morning_str.matches("0")){
+        if (early_morning_str.matches("0")) {
             early_morning.setChecked(false);
         } else {
             early_morning.setChecked(true);
         }
 
-        if(morning_str.matches("0")){
+        if (morning_str.matches("0")) {
             morning.setChecked(false);
         } else {
             morning.setChecked(true);
         }
 
-        if(afternoon_str.matches("0")){
+        if (afternoon_str.matches("0")) {
             afternoon.setChecked(false);
         } else {
             afternoon.setChecked(true);
         }
 
-        if(late_afternoon_str.matches("0")){
+        if (late_afternoon_str.matches("0")) {
             late_afternoon.setChecked(false);
         } else {
             late_afternoon.setChecked(true);
         }
 
-        if(evening_str.matches("0")){
+        if (evening_str.matches("0")) {
             evening.setChecked(false);
         } else {
             evening.setChecked(true);
@@ -248,20 +306,20 @@ public class TodayAppointments extends Fragment {
 
     }
 
-    private  void appointmentstatus(String status,String appointment_id){
+    private void appointmentstatus(String status, String appointment_id) {
         dialog = new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         dialog.setContentView(R.layout.dialog_layout);
         dialog.setCancelable(false);
         AVLoadingIndicatorView progressView = (AVLoadingIndicatorView) dialog.findViewById(R.id.progressView);
-        dialog.show();
+        //dialog.show();
 
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("status", status);
 
         try {
-            Call<JsonObject> d = RetrofitAPI.getInstance().getApi().appointmentstatus(appointment_id,jsonObject);
+            Call<JsonObject> d = RetrofitAPI.getInstance().getApi().appointmentstatus(appointment_id, jsonObject);
             d.enqueue(new Callback<JsonObject>() {
                 @Override
                 public void onResponse(Call<JsonObject> call, retrofit2.Response<JsonObject> response) {
@@ -273,7 +331,7 @@ public class TodayAppointments extends Fragment {
                         Log.e("API", response.body().toString());
 
                         if (obj.getString("status").matches("true")) {
-                            Toasty.success(context,obj.getString("message"),Toast.LENGTH_LONG).show();
+                            Toasty.success(context, obj.getString("message"), Toast.LENGTH_LONG).show();
 
                         } else {
                             Toasty.error(context, obj.getString("message"), Toast.LENGTH_LONG).show();

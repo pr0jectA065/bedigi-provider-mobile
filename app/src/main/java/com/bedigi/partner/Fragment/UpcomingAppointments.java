@@ -142,7 +142,8 @@ public class UpcomingAppointments extends Fragment {
                                             arr.getJSONObject(i).getString("provider_phone"),
                                             arr.getJSONObject(i).getString("address1"),
                                             arr.getJSONObject(i).getString("latitude"),
-                                            arr.getJSONObject(i).getString("longitude")));
+                                            arr.getJSONObject(i).getString("longitude"),
+                                            arr.getJSONObject(i).getString("service_status")));
 
                                 }
 
@@ -253,7 +254,7 @@ public class UpcomingAppointments extends Fragment {
         dialog.setContentView(R.layout.dialog_layout);
         dialog.setCancelable(false);
         AVLoadingIndicatorView progressView = (AVLoadingIndicatorView) dialog.findViewById(R.id.progressView);
-        dialog.show();
+        //dialog.show();
 
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("status", status);

@@ -9,6 +9,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -38,14 +39,16 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.MyView
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
-        TextView package_name,user_name;
+        TextView package_name, user_name;
         LinearLayout parent;
+        ImageButton delete;
 
         public MyViewHolder(View view) {
             super(view);
 
             package_name = (TextView) view.findViewById(R.id.package_name);
             user_name = (TextView) view.findViewById(R.id.user_name);
+            delete = view.findViewById(R.id.delete);
             parent = (LinearLayout) view.findViewById(R.id.parent);
 
         }
@@ -61,23 +64,32 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.MyView
     @Override
     public void onBindViewHolder(final ChatListAdapter.MyViewHolder holder, final int position) {
 
-       holder.package_name.setText(verticalList.get(position).service_name);
-       holder.user_name.setText(verticalList.get(position).user_name);
+        holder.package_name.setText(verticalList.get(position).service_name);
+        holder.user_name.setText(verticalList.get(position).user_name);
 
-       holder.parent.setOnClickListener(new View.OnClickListener() {
-           @Override
-           public void onClick(View view) {
-               Intent intent = new Intent(context, ChatActivity.class);
-               intent.putExtra("user_name",verticalList.get(position).user_name);
-               intent.putExtra("provider_name",verticalList.get(position).provider_name);
-               intent.putExtra("service_name",verticalList.get(position).service_name);
-               intent.putExtra("customer_id",verticalList.get(position).customer_id);
-               intent.putExtra("provider_id",verticalList.get(position).provider_id);
-               intent.putExtra("service_provider_id",verticalList.get(position).service_provider_id);
-               intent.putExtra("from","chat");
-               context.startActivity(intent);
-           }
-       });
+        holder.parent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, ChatActivity.class);
+                intent.putExtra("user_name", verticalList.get(position).user_name);
+                intent.putExtra("provider_name", verticalList.get(position).provider_name);
+                intent.putExtra("service_name", verticalList.get(position).service_name);
+                intent.putExtra("customer_id", verticalList.get(position).customer_id);
+                intent.putExtra("provider_id", verticalList.get(position).provider_id);
+                intent.putExtra("service_provider_id", verticalList.get(position).service_provider_id);
+                intent.putExtra("from", "chat");
+                context.startActivity(intent);
+            }
+        });
+
+        holder.delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (context instanceof ChatList) {
+                    ((ChatList) context).delete_chat(verticalList.get(position).customer_id, verticalList.get(position).provider_id, verticalList.get(position).service_provider_id);
+                }
+            }
+        });
 
     }
 

@@ -93,7 +93,7 @@ public class Profile extends Fragment {
     ImageButton uploadImage;
     String filename, picturePath, encodedImage;
     CircleImageView image;
-    Spinner state, city;
+    Spinner state, city, exp_type;
     Dialog dialog;
     CircularProgressButton signUp;
     List<StateCityListModel> list, list1;
@@ -193,6 +193,8 @@ public class Profile extends Fragment {
 
         state = (Spinner) view.findViewById(R.id.state);
         city = (Spinner) view.findViewById(R.id.city);
+        exp_type = (Spinner) view.findViewById(R.id.exp_type);
+
         list = new ArrayList<>();
         list1 = new ArrayList<>();
         list_localities = new ArrayList<>();
@@ -619,6 +621,13 @@ public class Profile extends Fragment {
             }
         });
 
+        List<String> exp_list = new ArrayList<>();
+        exp_list.add("Years");
+        exp_list.add("Months");
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(context,
+                R.layout.spinner_item, R.id.item, exp_list);
+        exp_type.setAdapter(adapter);
+
         return view;
     }
 
@@ -840,7 +849,7 @@ public class Profile extends Fragment {
             jsonObject.addProperty("is_PCC", is_pcc_check);
             jsonObject.addProperty("is_fulltime", is_exp_check);
             jsonObject.addProperty("zipcode", et_zipcode.getText().toString().trim());
-            jsonObject.addProperty("experience_years", et_expirience.getText().toString().trim());
+            jsonObject.addProperty("experience_years", et_expirience.getText().toString().trim() + " "+ exp_type.getSelectedItem());
 
             Call<JsonObject> d = RetrofitAPI.getInstance().getApi().updateprofile(appPreferences.getId(), jsonObject);
             d.enqueue(new Callback<JsonObject>() {
@@ -856,6 +865,7 @@ public class Profile extends Fragment {
                         Log.e("API", response.body().toString());
                         if (obj.getString("status").matches("true")) {
                             Toasty.success(context, obj.getString("message"), Toast.LENGTH_LONG).show();
+                            appPreferences.setName(first_name.getText().toString().trim());
 
                         } else {
                             dialog.dismiss();
@@ -1144,7 +1154,8 @@ public class Profile extends Fragment {
 
                             email.setText(data.getString("Email"));
 
-                            et_expirience.setText(data.getString("experience_years"));
+                            //str.split(" ", 1)[0]
+                            et_expirience.setText(data.getString("experience_years").replaceAll(" .*", ""));
 
                             if (data.getString("is_fulltime").matches("1")) {
                                 is_exp_check = "1";

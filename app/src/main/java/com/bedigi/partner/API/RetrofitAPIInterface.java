@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
@@ -22,6 +23,9 @@ public interface RetrofitAPIInterface {
 
     @GET("user/profile/user_id/{user_id}/")
     Call<JsonObject> Profile(@Path("user_id") String user_id);
+
+    @GET("invoice/pdf/appointment_id/{appointment_id}")
+    Call<JsonObject> downlaod_invoice(@Path("appointment_id") String appointment_id);
 
     @POST("user/updateimage/user_id/{user_id}")
     Call<JsonObject> updateimage(@Path("user_id") String user_id,@Body JsonObject loginDetails);
@@ -74,10 +78,16 @@ public interface RetrofitAPIInterface {
     @POST("Order/appointmentstatus/appointment_id/{appointment_id}")
     Call<JsonObject> appointmentstatus(@Path("appointment_id") String appointment_id, @Body JsonObject loginDetails);
 
+    @POST("order/start_end_service/appointment_id/{appointment_id}")
+    Call<JsonObject> start_end_service(@Path("appointment_id") String appointment_id, @Body JsonObject loginDetails);
+
     @POST("services/chat/service_provider_id/{service_provider_id}")
     Call<JsonObject> sendChatMessage(@Path("service_provider_id") String service_provider_id,@Body JsonObject obj);
 
     @GET("services/chat/customer_id/{customer_id}/provider_id/{provider_id}/service_provider_id/{service_provider_id}")
     Call<JsonObject> getChatMessage(@Path("customer_id") String customer_id,@Path("provider_id") String provider_id,@Path("service_provider_id") String service_provider_id);
+
+    @DELETE("services/chatlist/{customer_id}/{provider_id}/{service_provider_id}")
+    Call<JsonObject> chatdelete(@Path("customer_id") String customer_id,@Path("provider_id") String provider_id,@Path("service_provider_id") String service_provider_id);
 
 }

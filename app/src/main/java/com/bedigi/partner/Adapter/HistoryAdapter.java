@@ -1,7 +1,10 @@
 package com.bedigi.partner.Adapter;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
@@ -10,9 +13,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -51,6 +57,9 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyViewHo
         ImageView status;
         TextView package_name, datetime, location, patient_name, tvStatus;
         ImageButton dropdown;
+        View view;
+        RelativeLayout action_view;
+        TextView start,hold,stop,download_invoice;
 
         public MyViewHolder(View root) {
             super(root);
@@ -67,6 +76,13 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyViewHo
             //reschdule=(TextView)root.findViewById(R.id.reschdule);
 
             status = (ImageView) root.findViewById(R.id.status);
+
+            view = root.findViewById(R.id.view);
+            action_view = root.findViewById(R.id.action_view);
+            start = root.findViewById(R.id.start);
+            hold = root.findViewById(R.id.hold);
+            stop = root.findViewById(R.id.stop);
+            download_invoice = root.findViewById(R.id.download_invoice);
 
         }
     }
@@ -140,78 +156,91 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyViewHo
             holder.dropdown.setVisibility(View.INVISIBLE);
         }
 
+        if(type.matches("today")){
+           holder.view.setVisibility(View.VISIBLE);
+           holder.action_view.setVisibility(View.VISIBLE);
+        } else {
+            holder.view.setVisibility(View.GONE);
+            holder.action_view.setVisibility(View.GONE);
+        }
+
+        if(verticalList.get(position).service_status.matches("1")){
+            holder.start.setBackgroundResource(R.drawable.grey_roundedview);
+            holder.start.setEnabled(false);
+        } else if(verticalList.get(position).service_status.matches("3")){
+            holder.start.setBackgroundResource(R.drawable.grey_roundedview);
+            holder.start.setEnabled(false);
+            holder.stop.setBackgroundResource(R.drawable.grey_roundedview);
+            holder.stop.setEnabled(false);
+        } else if(verticalList.get(position).service_status.matches("2")){
+            holder.start.setBackgroundResource(R.drawable.grey_roundedview);
+            holder.start.setEnabled(false);
+        }
+
+        holder.start.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                holder.start.setBackgroundResource(R.drawable.grey_roundedview);
+                holder.start.setEnabled(false);
+                listener.onEvent("100", verticalList.get(position).appointment_id, String.valueOf(position),
+                        "", verticalList.get(position).date);
+            }
+        });
+
+        holder.hold.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listener.onEvent("101", verticalList.get(position).appointment_id, String.valueOf(position),
+                        "", verticalList.get(position).date);
+            }
+        });
+
+        holder.stop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                holder.stop.setBackgroundResource(R.drawable.grey_roundedview);
+                holder.stop.setEnabled(false);
+                listener.onEvent("102", verticalList.get(position).appointment_id, String.valueOf(position),
+                        "", verticalList.get(position).date);
+            }
+        });
+
         holder.dropdown.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                if (type.matches("today")) {
+                PopupMenu popup = new PopupMenu(context, view);
+                popup.getMenuInflater().inflate(R.menu.pop_up_today, popup.getMenu());
+                Menu popupMenu = popup.getMenu();
 
-                    PopupMenu popup = new PopupMenu(context, view);
-                    popup.getMenuInflater().inflate(R.menu.pop_up_today, popup.getMenu());
-                    Menu popupMenu = popup.getMenu();
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.accept:
+                                listener.onEvent("1", verticalList.get(position).appointment_id, String.valueOf(position),
+                                        "", verticalList.get(position).date);
+                                break;
 
-                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                        public boolean onMenuItemClick(MenuItem item) {
-                            switch (item.getItemId()) {
-                                case R.id.accept:
-                                    listener.onEvent("1", verticalList.get(position).appointment_id, String.valueOf(position),
-                                            "", verticalList.get(position).date);
-                                    break;
+                            case R.id.reject:
+                                listener.onEvent("3", verticalList.get(position).appointment_id, String.valueOf(position),
+                                        "", verticalList.get(position).date);
+                                break;
 
-                                case R.id.reject:
-                                    listener.onEvent("3", verticalList.get(position).appointment_id, String.valueOf(position),
-                                            "", verticalList.get(position).date);
-                                    break;
-
-                                case R.id.start:
-                                    listener.onEvent("5", verticalList.get(position).appointment_id, String.valueOf(position),
-                                            "", verticalList.get(position).date);
-                                    break;
-
-                                case R.id.stop:
-                                    listener.onEvent("6", verticalList.get(position).appointment_id, String.valueOf(position),
-                                            "", verticalList.get(position).date);
-                                    break;
-
-                                case R.id.hold:
-                                    listener.onEvent("7", verticalList.get(position).appointment_id, String.valueOf(position),
-                                            "", verticalList.get(position).date);
-                                    break;
-                            }
-
-                            return true;
                         }
-                    });
-                    popup.show();
 
-                } else {
+                        return true;
+                    }
+                });
+                popup.show();
 
-                    PopupMenu popup = new PopupMenu(context, view);
-                    popup.getMenuInflater().inflate(R.menu.pop_up, popup.getMenu());
-                    Menu popupMenu = popup.getMenu();
+            }
+        });
 
-                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                        public boolean onMenuItemClick(MenuItem item) {
-                            switch (item.getItemId()) {
-                                case R.id.accept:
-                                    listener.onEvent("1", verticalList.get(position).appointment_id, String.valueOf(position),
-                                            "", verticalList.get(position).date);
-                                    break;
-
-                                case R.id.reject:
-                                    listener.onEvent("3", verticalList.get(position).appointment_id, String.valueOf(position),
-                                            "", verticalList.get(position).date);
-                                    break;
-                            }
-
-                            return true;
-                        }
-                    });
-                    popup.show();
-
-                }
-
-
+        holder.download_invoice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listener.onEvent("3001", verticalList.get(position).appointment_id, String.valueOf(position),
+                        "", verticalList.get(position).date);
             }
         });
 
