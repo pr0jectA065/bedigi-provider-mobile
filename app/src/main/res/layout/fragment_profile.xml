@@ -142,24 +142,47 @@
 
                             </com.google.android.material.textfield.TextInputLayout>
 
-                            <com.google.android.material.textfield.TextInputLayout
+                            <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                                android:layout_marginTop="@dimen/dp_10"
-                                app:startIconDrawable="@drawable/icon_experience"
-                                android:hint="Experience (in years)">
+                                android:orientation="horizontal"
+                                android:layout_marginTop="@dimen/dp_10">
 
-                                <EditText
-                                    android:id="@+id/et_expirience"
-                                    android:layout_width="match_parent"
+                                <com.google.android.material.textfield.TextInputLayout
+                                    android:layout_width="0dp"
+                                    android:layout_weight="1"
                                     android:layout_height="wrap_content"
-                                    android:inputType="numberDecimal"
-                                    android:padding="@dimen/dp_10"
-                                    android:textColor="@color/black"
-                                    android:textSize="@dimen/sp_16" />
+                                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                                    app:startIconDrawable="@drawable/icon_experience"
+                                    android:hint="Experience">
 
-                            </com.google.android.material.textfield.TextInputLayout>
+                                    <EditText
+                                        android:id="@+id/et_expirience"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:inputType="numberDecimal"
+                                        android:padding="@dimen/dp_10"
+                                        android:textColor="@color/black"
+                                        android:textSize="@dimen/sp_16" />
+
+                                </com.google.android.material.textfield.TextInputLayout>
+
+                                <RelativeLayout
+                                    android:layout_marginStart="@dimen/dp_10"
+                                    android:layout_width="150dp"
+                                    android:layout_height="match_parent"
+                                    android:padding="8dp"
+                                    android:background="#f0efef">
+                                    <Spinner
+                                        android:layout_centerVertical="true"
+                                        style="@style/Widget.AppCompat.DropDownItem.Spinner"
+                                        android:id="@+id/exp_type"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="30dp" />
+                                </RelativeLayout>
+
+                            </LinearLayout>
+
 
                             <com.google.android.material.textfield.TextInputLayout
                                 android:layout_width="match_parent"

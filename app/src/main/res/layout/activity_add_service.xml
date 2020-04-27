@@ -107,6 +107,72 @@
 
         </LinearLayout>
 
+        <TextView
+            android:text="Booking Amount"
+            android:layout_marginStart="@dimen/dp_20"
+            android:layout_marginEnd="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_16"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <LinearLayout
+            android:layout_marginTop="@dimen/dp_5"
+            android:layout_marginStart="@dimen/dp_16"
+            android:layout_marginEnd="@dimen/dp_16"
+            android:layout_marginBottom="@dimen/dp_5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_marginEnd="@dimen/dp_10"
+                android:layout_height="wrap_content"
+                android:hint="In Rupees"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                <EditText
+                    android:id="@+id/booking_mat_value"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:padding="@dimen/dp_10"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/sp_16" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_marginStart="@dimen/dp_10"
+                android:layout_height="wrap_content"
+                android:hint="In % (wrt Price)"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                <EditText
+                    android:id="@+id/booking_amt_in_percent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:padding="@dimen/dp_10"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/sp_16" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/booking_amount"
+            android:text="dsdsdsd"
+            android:textSize="@dimen/sp_14"
+            android:textColor="@color/black"
+            android:gravity="right"
+            android:layout_marginStart="@dimen/sp_16"
+            android:layout_marginEnd="@dimen/dp_16"/>
+
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_marginStart="@dimen/dp_16"

@@ -133,6 +133,40 @@ public class ChatList extends AppCompatActivity {
         }
     }
 
+    public void delete_chat(String customer_id, String provider_id, String service_provider_id) {
+        try {
+            Call<JsonObject> d = RetrofitAPI.getInstance().getApi().chatdelete(customer_id,provider_id,service_provider_id);
+            d.enqueue(new Callback<JsonObject>() {
+                @Override
+                public void onResponse(Call<JsonObject> call, retrofit2.Response<JsonObject> response) {
+                    try {
+                        JSONObject obj = new JSONObject(response.body().toString());
+                        //JSONArray arr = obj.getJSONArray("data");
+
+                        Log.e("API", response.body().toString());
+
+                        if (obj.getString("status").matches("true")) {
+                            getList();
+                        } else {
+                            Toasty.error(ChatList.this, obj.getString("message"), Toast.LENGTH_LONG).show();
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<JsonObject> call, Throwable t) {
+                    Log.e("re", "" + t.toString());
+                }
+            });
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
