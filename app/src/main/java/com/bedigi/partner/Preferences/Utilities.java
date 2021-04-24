@@ -27,8 +27,8 @@ import java.util.regex.Pattern;
 
 public class Utilities extends Activity {
 
-    //public static String URL = "http://54.200.100.175/bedigi/api/";
-    public static String URL = "http://54.185.194.172/bedigi/api/";
+    //public static String URL = "http://54.185.194.172/bedigi/api/";
+    public static String URL = "http://34.216.47.187/bedigi/api/";
 
     public static void goToPage(Context paramContext, Class paramClass, Bundle paramBundle) {
         Intent localIntent = new Intent(paramContext, paramClass);

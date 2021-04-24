@@ -11,11 +11,14 @@
         android:supportsRtl="true"
         android:theme="@style/MyMaterialTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".Activities.ChatList"
+        <activity
+            android:name=".Activities.ChatList"
             android:screenOrientation="portrait" />
-        <activity android:name=".Activities.Appointments"
+        <activity
+            android:name=".Activities.Appointments"
             android:screenOrientation="portrait" />
-        <activity android:name=".Activities.AddService"
+        <activity
+            android:name=".Activities.AddService"
             android:screenOrientation="portrait" />
         <activity
             android:name=".Activities.EnterOTP"
@@ -32,7 +35,7 @@
         <activity
             android:name=".Activities.MainActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan" />
         <activity android:name=".Activities.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -49,9 +52,9 @@
             </intent-filter>
         </receiver>
     </application>
-    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>
