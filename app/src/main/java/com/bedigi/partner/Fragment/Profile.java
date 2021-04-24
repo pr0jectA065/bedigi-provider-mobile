@@ -24,6 +24,7 @@ import androidx.fragment.app.Fragment;
 import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,6 +56,9 @@ import com.bedigi.partner.Model.TimeSlotModel;
 import com.bedigi.partner.Preferences.AppPreferences;
 import com.bedigi.partner.Preferences.CustomRadioBt.PresetRadioGroup;
 import com.bedigi.partner.R;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipDrawable;
+import com.google.android.material.chip.ChipGroup;
 import com.google.gson.JsonObject;
 import com.squareup.picasso.Picasso;
 import com.wang.avi.AVLoadingIndicatorView;
@@ -87,7 +91,7 @@ import static com.bedigi.partner.Preferences.Utilities.getImageUrlWithAuthority;
 public class Profile extends Fragment {
 
     Context context;
-    EditText et_dob, et_zipcode, et_expirience;
+    EditText et_dob, et_zipcode, et_expirience, et_address;
     Calendar c;
     int year, month, day;
     ImageButton uploadImage;
@@ -113,10 +117,10 @@ public class Profile extends Fragment {
     CheckBox check_pcc, check_expirience;
     String is_pcc_check = "0", is_exp_check = "0";
 
-    Button bt_profile, bt_visiting;
-    ExpandableLayout exl_basic_info, exl_visiting;
+    Button bt_profile, bt_visiting,bt_payment;
+    ExpandableLayout exl_basic_info, exl_visiting,exl_payment;
 
-    SwitchCompat is_available;
+    SwitchCompat is_available,all_days;
     LinearLayout timeLL;
     CheckBox early_morning, morning, afternoon, late_afternoon, evening;
     String is_available_str = "", early_morning_str = "", morning_str = "", afternoon_str = "", late_afternoon_str = "", evening_str = "";
@@ -134,6 +138,8 @@ public class Profile extends Fragment {
     List<Locality_Model> list_localities;
     RelativeLayout rl_city, rl_locality;
     String[] temp;
+
+    ChipGroup chipGroup;
 
     public Profile() {
         // Required empty public constructor
@@ -168,19 +174,24 @@ public class Profile extends Fragment {
 
         exl_basic_info = view.findViewById(R.id.exl_basic_info);
         exl_visiting = view.findViewById(R.id.exl_visiting);
+        exl_payment = view.findViewById(R.id.exl_payment);
         bt_profile = view.findViewById(R.id.bt_profile);
         bt_visiting = view.findViewById(R.id.bt_visiting);
+        bt_payment = view.findViewById(R.id.bt_payment);
 
         first_name = (EditText) view.findViewById(R.id.first_name);
         email = (EditText) view.findViewById(R.id.email);
         et_dob = (EditText) view.findViewById(R.id.et_dob);
         et_zipcode = (EditText) view.findViewById(R.id.et_zipcode);
         et_expirience = (EditText) view.findViewById(R.id.et_expirience);
+        et_address = (EditText) view.findViewById(R.id.et_address);
 
         segmented2 = (RadioGroup) view.findViewById(R.id.segmented2);
 
         check_pcc = view.findViewById(R.id.check_pcc);
         check_expirience = view.findViewById(R.id.check_expirience);
+
+        all_days = view.findViewById(R.id.all_days);
 
         male = (RadioButton) view.findViewById(R.id.male);
         female = (RadioButton) view.findViewById(R.id.female);
@@ -198,6 +209,8 @@ public class Profile extends Fragment {
         list = new ArrayList<>();
         list1 = new ArrayList<>();
         list_localities = new ArrayList<>();
+
+        chipGroup = view.findViewById(R.id.tag_group);
 
         check_pcc.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -365,6 +378,20 @@ public class Profile extends Fragment {
             }
         });
 
+        bt_payment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (exl_payment.isExpanded()) {
+                    exl_payment.collapse();
+                    bt_payment.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.ic_arrow_drop_down, 0);
+                } else {
+                    exl_payment.expand();
+                    bt_payment.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.ic_arrow_drop_up, 0);
+
+                }
+            }
+        });
+
         is_available.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -380,6 +407,18 @@ public class Profile extends Fragment {
                     afternoon_str = "0";
                     late_afternoon_str = "0";
                     evening_str = "0";
+                }
+            }
+        });
+
+        all_days.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b) {
+                    timeLL.setVisibility(View.VISIBLE);
+                    is_available.setChecked(true);
+                } else {
+
                 }
             }
         });
@@ -627,6 +666,45 @@ public class Profile extends Fragment {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(context,
                 R.layout.spinner_item, R.id.item, exp_list);
         exp_type.setAdapter(adapter);
+
+
+        List<String> spec_list = new ArrayList<>();
+        spec_list.add("Electricity");
+        spec_list.add("Plumber");
+        spec_list.add("Carpenter");
+        spec_list.add("Painter");
+
+        for (int index = 0; index < spec_list.size(); index++) {
+            final String tagName = spec_list.get(index);
+            final Chip chip = new Chip(context);
+            ChipDrawable chipDrawable = ChipDrawable.createFromAttributes(context, null, 0, R.style.Widget_MaterialComponents_Chip_Choice);
+            chip.setChipDrawable(chipDrawable);
+            int paddingDp = (int) TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_DIP, 10,
+                    getResources().getDisplayMetrics()
+            );
+            chip.setPadding(paddingDp, paddingDp, paddingDp, paddingDp);
+            chip.setText(tagName);
+            chip.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                    Log.e("chekediDS", chipGroup.getCheckedChipIds().toString());
+                    //[1, 2, 9, 13]
+                }
+            });
+            /*chip.setCloseIconResource(R.drawable.ic_baseline_close_24);
+            chip.setCloseIconEnabled(true);
+            //Added click listener on close icon to remove tag from ChipGroup
+            chip.setOnCloseIconClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //tagList.remove(tagName);
+                    chipGroup.removeView(chip);
+                }
+            });*/
+
+            chipGroup.addView(chip);
+        }
 
         return view;
     }

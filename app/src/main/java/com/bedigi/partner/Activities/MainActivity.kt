@@ -1,7 +1,17 @@
 package com.bedigi.partner.Activities
 
 import android.content.DialogInterface
+import android.content.Intent
+import android.os.Bundle
+import android.os.Handler
+import android.os.StrictMode
+import android.text.Html
+import android.view.View
+import android.widget.ImageButton
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
@@ -9,29 +19,12 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
-
-import android.content.Intent
-import android.os.Bundle
-import android.os.Handler
-import android.os.StrictMode
-import android.text.Html
-import android.util.Log
-import android.view.View
-import android.widget.ImageButton
-import android.widget.TextView
-import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
-
-import com.bedigi.partner.Fragment.Home
-import com.bedigi.partner.Fragment.MyServices
-import com.bedigi.partner.Fragment.Profile
-import com.bedigi.partner.Fragment.Profile_home
+import com.bedigi.partner.Fragment.*
 import com.bedigi.partner.Preferences.AppPreferences
 import com.bedigi.partner.Preferences.Utilities
 import com.bedigi.partner.R
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
-
-import me.ibrahimsn.lib.SmoothBottomBar
 
 class MainActivity : AppCompatActivity() {
 
@@ -43,7 +36,37 @@ class MainActivity : AppCompatActivity() {
     internal var navigationView: NavigationView? = null
     internal var doubleBackToExitPressedOnce = false
 
-    internal var bottomBar: SmoothBottomBar? = null
+    internal var bottomBar: BottomNavigationView? = null
+
+    private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { menuItem ->
+        when (menuItem.itemId) {
+            R.id.home -> {
+                val fragment = Home()
+                supportFragmentManager.beginTransaction().replace(R.id.main_container, fragment, fragment.javaClass.getSimpleName())
+                        .commit()
+                return@OnNavigationItemSelectedListener true
+            }
+            R.id.orders -> {
+                val fragment = MyServices()
+                supportFragmentManager.beginTransaction().replace(R.id.main_container, fragment, fragment.javaClass.getSimpleName())
+                        .commit()
+                return@OnNavigationItemSelectedListener true
+            }
+            R.id.profile -> {
+                val fragment = Profile_home()
+                supportFragmentManager.beginTransaction().replace(R.id.main_container, fragment, fragment.javaClass.getSimpleName())
+                        .commit()
+                return@OnNavigationItemSelectedListener true
+            }
+            R.id.wallet -> {
+                val fragment = Wallet()
+                supportFragmentManager.beginTransaction().replace(R.id.main_container, fragment, fragment.javaClass.getSimpleName())
+                        .commit()
+                return@OnNavigationItemSelectedListener true
+            }
+        }
+        false
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,9 +79,10 @@ class MainActivity : AppCompatActivity() {
         supportActionBar!!.setDisplayShowHomeEnabled(true)
         supportActionBar!!.setTitle("")
 
-        bottomBar = findViewById<View>(R.id.bottomBar) as SmoothBottomBar
+        bottomBar = findViewById<View>(R.id.bottomBar) as BottomNavigationView
 
-        bottomBar!!.onItemSelected = {
+        bottomBar!!.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
+        /*bottomBar!!.onItemSelected = {
             Log.e("TAG", "Item $it selected")
 
             if (it == 0) {
@@ -77,7 +101,7 @@ class MainActivity : AppCompatActivity() {
                 fragmentTransaction!!.replace(R.id.main_container, fragment!!)
                 fragmentTransaction!!.commit()
             }
-        }
+        }*/
 
         val builder = StrictMode.VmPolicy.Builder()
         StrictMode.setVmPolicy(builder.build())
@@ -105,7 +129,7 @@ class MainActivity : AppCompatActivity() {
         fragmentManager = supportFragmentManager
         if (Utilities.checkNetworkConnection(this@MainActivity)) {
 
-            bottomBar!!.setActiveItem(0)
+            bottomBar!!.selectedItemId = R.id.home
             fragmentTransaction = fragmentManager!!.beginTransaction()
             fragment = Home()
             fragmentTransaction!!.replace(R.id.main_container, fragment!!)

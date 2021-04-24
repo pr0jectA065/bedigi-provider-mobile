@@ -52,7 +52,7 @@
                         android:layout_height="wrap_content"
                         android:padding="@dimen/dp_10"
                         app:el_duration="1000"
-                        app:el_expanded="true"
+                        app:el_expanded="false"
                         app:el_parallax="0.5">
 
                         <LinearLayout
@@ -336,6 +336,34 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/dp_5" />
 
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                app:startIconDrawable="@drawable/icon_address"
+                                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                                android:layout_marginTop="@dimen/dp_10"
+                                android:hint="Address*">
+
+                                <EditText
+                                    android:id="@+id/et_address"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:inputType="textPostalAddress"
+                                    android:padding="@dimen/dp_10"
+                                    android:textColor="@color/black"
+                                    android:textSize="@dimen/sp_16" />
+
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                            <com.google.android.material.chip.ChipGroup
+                                android:id="@+id/tag_group"
+                                android:layout_width="match_parent"
+                                android:background="@color/white"
+                                android:layout_height="wrap_content"
+                                app:chipSpacingVertical="5dp"
+                                app:chipSpacingHorizontal="5dp"
+                                android:layout_marginTop="10dp"/>
+
                             <br.com.simplepass.loading_button_lib.customViews.CircularProgressButton
                                 android:id="@+id/signUp"
                                 android:layout_width="250dp"
@@ -390,7 +418,7 @@
                         android:layout_height="wrap_content"
                         android:padding="@dimen/dp_10"
                         app:el_duration="1000"
-                        app:el_expanded="true"
+                        app:el_expanded="false"
                         app:el_parallax="0.5">
 
                         <LinearLayout
@@ -473,6 +501,13 @@
 
                             </com.bedigi.partner.Preferences.CustomRadioBt.PresetRadioGroup>
 
+                            <androidx.appcompat.widget.SwitchCompat
+                                android:id="@+id/all_days"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal"
+                                android:text="Available all days"
+                                app:switchPadding="@dimen/dp_10"/>
 
                            <androidx.appcompat.widget.SwitchCompat
                                android:id="@+id/is_available"
@@ -541,6 +576,140 @@
                                 android:textColor="@color/white" />
 
                         </LinearLayout>
+                    </net.cachapa.expandablelayout.ExpandableLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dp_10"
+                android:layout_marginTop="@dimen/dp_16"
+                android:layout_marginEnd="@dimen/dp_10"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="3dp"
+                app:cardElevation="3dp"
+                app:strokeColor="@color/colorPrimary"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <Button
+                        android:id="@+id/bt_payment"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:drawableEnd="@drawable/ic_arrow_drop_down"
+                        android:drawablePadding="5dp"
+                        android:text="Payment Information"
+                        android:insetBottom="0dp"
+                        android:insetTop="0dp"
+                        android:textSize="@dimen/sp_15" />
+
+                    <net.cachapa.expandablelayout.ExpandableLayout
+                        android:id="@+id/exl_payment"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/dp_10"
+                        app:el_duration="1000"
+                        app:el_expanded="false"
+                        app:el_parallax="0.5">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/dp_10"
+                                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                                app:startIconDrawable="@drawable/icon_name"
+                                android:hint="Account Number*">
+
+                                <EditText
+                                    android:id="@+id/account_number"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:inputType="number"
+                                    android:padding="@dimen/dp_10"
+                                    android:textColor="@color/black"
+                                    android:textSize="@dimen/sp_16" />
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/dp_10"
+                                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                                app:startIconDrawable="@drawable/icon_name"
+                                android:hint="Re-enter account number*">
+
+                                <EditText
+                                    android:id="@+id/re_account_number"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:inputType="number"
+                                    android:padding="@dimen/dp_10"
+                                    android:textColor="@color/black"
+                                    android:textSize="@dimen/sp_16" />
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/dp_10"
+                                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                                app:startIconDrawable="@drawable/icon_name"
+                                android:hint="IFSC*">
+
+                                <EditText
+                                    android:id="@+id/ifsc"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:inputType="text"
+                                    android:padding="@dimen/dp_10"
+                                    android:textColor="@color/black"
+                                    android:textSize="@dimen/sp_16" />
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/dp_10"
+                                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                                app:startIconDrawable="@drawable/icon_name"
+                                android:hint="Recipient name*">
+
+                                <EditText
+                                    android:id="@+id/recipient_name"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:inputType="text"
+                                    android:padding="@dimen/dp_10"
+                                    android:textColor="@color/black"
+                                    android:textSize="@dimen/sp_16" />
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                            <br.com.simplepass.loading_button_lib.customViews.CircularProgressButton
+                                android:id="@+id/payment_info_save"
+                                android:layout_width="250dp"
+                                android:layout_height="40dp"
+                                android:layout_gravity="center_horizontal"
+                                android:layout_marginTop="@dimen/dp_25"
+                                android:background="@drawable/roundedview"
+                                android:text="SAVE PAYMENT INFO"
+                                android:textColor="@color/white"
+                                app:spinning_bar_color="#FFF"
+                                app:spinning_bar_padding="6dp"
+                                app:spinning_bar_width="4dp" />
+
+                        </LinearLayout>
+
                     </net.cachapa.expandablelayout.ExpandableLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
