@@ -49,6 +49,7 @@ import android.widget.Toast;
 import com.bedigi.partner.API.RetrofitAPI;
 import com.bedigi.partner.Activities.AddService;
 import com.bedigi.partner.Adapter.PackageAdapter;
+import com.bedigi.partner.Model.CommonModel;
 import com.bedigi.partner.Model.Locality_Model;
 import com.bedigi.partner.Model.PackageData;
 import com.bedigi.partner.Model.StateCityListModel;
@@ -70,8 +71,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
+import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -91,7 +94,7 @@ import static com.bedigi.partner.Preferences.Utilities.getImageUrlWithAuthority;
 public class Profile extends Fragment {
 
     Context context;
-    EditText et_dob, et_zipcode, et_expirience, et_address;
+    EditText et_dob, et_zipcode, et_expirience;
     Calendar c;
     int year, month, day;
     ImageButton uploadImage;
@@ -99,7 +102,7 @@ public class Profile extends Fragment {
     CircleImageView image;
     Spinner state, city, exp_type;
     Dialog dialog;
-    CircularProgressButton signUp;
+    CircularProgressButton signUp, payment_info_save;
     List<StateCityListModel> list, list1;
     String state_selected = "";
     String city_selected = "";
@@ -108,7 +111,7 @@ public class Profile extends Fragment {
 
     LinearLayout main_layout;
 
-    EditText first_name, email;
+    EditText first_name, email, et_address;
     RadioButton male, female, others;
     RadioGroup segmented2;
     String sex_sel = "";
@@ -117,10 +120,10 @@ public class Profile extends Fragment {
     CheckBox check_pcc, check_expirience;
     String is_pcc_check = "0", is_exp_check = "0";
 
-    Button bt_profile, bt_visiting,bt_payment;
-    ExpandableLayout exl_basic_info, exl_visiting,exl_payment;
+    Button bt_profile, bt_visiting, bt_payment;
+    ExpandableLayout exl_basic_info, exl_visiting, exl_payment;
 
-    SwitchCompat is_available,all_days;
+    SwitchCompat is_available, all_days;
     LinearLayout timeLL;
     CheckBox early_morning, morning, afternoon, late_afternoon, evening;
     String is_available_str = "", early_morning_str = "", morning_str = "", afternoon_str = "", late_afternoon_str = "", evening_str = "";
@@ -140,6 +143,9 @@ public class Profile extends Fragment {
     String[] temp;
 
     ChipGroup chipGroup;
+    List<CommonModel> speciality_list;
+
+    EditText account_number, re_account_number, bank_name, ifsc, recipient_name;
 
     public Profile() {
         // Required empty public constructor
@@ -157,6 +163,13 @@ public class Profile extends Fragment {
 
         appPreferences = new AppPreferences(context);
         signUp = (CircularProgressButton) view.findViewById(R.id.signUp);
+        payment_info_save = (CircularProgressButton) view.findViewById(R.id.payment_info_save);
+
+        account_number = view.findViewById(R.id.account_number);
+        re_account_number = view.findViewById(R.id.re_account_number);
+        bank_name = view.findViewById(R.id.bank_name);
+        ifsc = view.findViewById(R.id.ifsc);
+        recipient_name = view.findViewById(R.id.recipient_name);
 
         rl_city = view.findViewById(R.id.rl_city);
         rl_locality = view.findViewById(R.id.rl_locality);
@@ -171,6 +184,7 @@ public class Profile extends Fragment {
         afternoon = view.findViewById(R.id.afternoon);
         late_afternoon = view.findViewById(R.id.late_afternoon);
         evening = view.findViewById(R.id.evening);
+        et_address = view.findViewById(R.id.et_address);
 
         exl_basic_info = view.findViewById(R.id.exl_basic_info);
         exl_visiting = view.findViewById(R.id.exl_visiting);
@@ -488,6 +502,7 @@ public class Profile extends Fragment {
         getState();
         getTimeSlot();
 
+
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -601,16 +616,16 @@ public class Profile extends Fragment {
 
                     temp = selected_localities_id.getText().toString().trim().split(",");
 
-                    for(int i=0;i<list_localities.size();i++){
-                        for(int j=0;j<temp.length;j++){
-                            if(list_localities.get(i).Id.matches(temp[j])){
+                    for (int i = 0; i < list_localities.size(); i++) {
+                        for (int j = 0; j < temp.length; j++) {
+                            if (list_localities.get(i).Id.matches(temp[j])) {
                                 bool_locality_checked[i] = true;
                             }
                         }
 
                     }
 
-                    Log.e("bool_locality_checked",bool_locality_checked.toString());
+                    Log.e("bool_locality_checked", bool_locality_checked.toString());
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(context);
                     //final List<String> listt = new ArrayList<>();
@@ -620,7 +635,7 @@ public class Profile extends Fragment {
                         str_locality[i] = list_localities.get(i).Name;
                     }
 
-                    Log.e("bool_locality_checked",bool_locality_checked.toString());
+                    Log.e("bool_locality_checked", bool_locality_checked.toString());
 
                     builder.setMultiChoiceItems(str_locality, bool_locality_checked, new DialogInterface.OnMultiChoiceClickListener() {
                         @Override
@@ -667,15 +682,139 @@ public class Profile extends Fragment {
                 R.layout.spinner_item, R.id.item, exp_list);
         exp_type.setAdapter(adapter);
 
+        payment_info_save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //account_number,re_account_number,bank_name,ifsc,recipient_name
+                if (account_number.getText().toString().trim().matches("")) {
+                    account_number.setError("Enter account number");
+                } else if (re_account_number.getText().toString().trim().matches("")) {
+                    re_account_number.setError("Enter account number again");
+                } else if(account_number.getText().toString().trim().matches(re_account_number.getText().toString().trim())){
+                    re_account_number.setError("Enter correct account number");
+                }else if (bank_name.getText().toString().trim().matches("")) {
+                    bank_name.setError("Enter Bank name");
+                } else if (ifsc.getText().toString().trim().matches("")) {
+                    ifsc.setError("Enter IFSC Code");
+                } else if (recipient_name.getText().toString().trim().matches("")) {
+                    recipient_name.setError("Enter recipient name");
+                } else {
+                    savePaymentInfo();
+                }
 
-        List<String> spec_list = new ArrayList<>();
-        spec_list.add("Electricity");
-        spec_list.add("Plumber");
-        spec_list.add("Carpenter");
-        spec_list.add("Painter");
+            }
+        });
 
-        for (int index = 0; index < spec_list.size(); index++) {
-            final String tagName = spec_list.get(index);
+        return view;
+    }
+
+    private void savePaymentInfo() {
+        dialog = new Dialog(context);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        dialog.setContentView(R.layout.dialog_layout);
+        dialog.setCancelable(false);
+        AVLoadingIndicatorView progressView = (AVLoadingIndicatorView) dialog.findViewById(R.id.progressView);
+        dialog.show();
+
+        try {
+
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("account_no", account_number.getText().toString().trim());
+            jsonObject.addProperty("ifsc", ifsc.getText().toString().trim());
+            jsonObject.addProperty("receipt_name", recipient_name.getText().toString().trim());
+            jsonObject.addProperty("bank_name", bank_name.getText().toString().trim());
+            jsonObject.addProperty("branch", "");
+            jsonObject.addProperty("address", "");
+            jsonObject.addProperty("user_id", appPreferences.getId());
+
+            Call<JsonObject> d = RetrofitAPI.getInstance().getApi().savePaymentInfo(jsonObject);
+            d.enqueue(new Callback<JsonObject>() {
+                @Override
+                public void onResponse(Call<JsonObject> call, retrofit2.Response<JsonObject> response) {
+                    try {
+                        dialog.dismiss();
+
+                        JSONObject obj = new JSONObject(response.body().toString());
+                        Log.e("API", response.body().toString());
+
+                        if(obj.getString("status").matches("true")){
+                            Toasty.success(context,obj.getString("message"),Toast.LENGTH_SHORT).show();
+                        }
+
+                    } catch (Exception e) {
+                        dialog.dismiss();
+                        //signUp.stopAnimation();
+                        //signUp.revertAnimation();
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<JsonObject> call, Throwable t) {
+                    dialog.dismiss();
+                    //signUp.stopAnimation();
+                    //signUp.revertAnimation();
+                    Log.e("re", "" + t.toString());
+                }
+            });
+
+        } catch (Exception e) {
+            dialog.dismiss();
+            // signUp.stopAnimation();
+            //signUp.revertAnimation();
+            e.printStackTrace();
+        }
+
+    }
+
+    private void getSpecility() {
+        try {
+            Call<JsonObject> d = RetrofitAPI.getInstance().getApi().getSpecility();
+            d.enqueue(new Callback<JsonObject>() {
+                @Override
+                public void onResponse(Call<JsonObject> call, retrofit2.Response<JsonObject> response) {
+                    try {
+                        dialog.dismiss();
+                        JSONObject obj = new JSONObject(response.body().toString());
+
+                        final JSONArray arr = obj.getJSONArray("data");
+
+                        if (obj.getString("status").matches("true")) {
+                            speciality_list = new ArrayList<>();
+
+                            for (int i = 0; i < arr.length(); i++) {
+                                speciality_list.add(new CommonModel(arr.getJSONObject(i).getString("id"),
+                                        arr.getJSONObject(i).getString("title"),
+                                        false));
+                            }
+
+                            getProfile();
+                        } else {
+                            Toasty.error(context, obj.getString("msg"), Toast.LENGTH_LONG).show();
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<JsonObject> call, Throwable t) {
+                    Log.e("re", "" + t.toString());
+                }
+            });
+
+        } catch (Exception e) {
+            dialog.dismiss();
+            e.printStackTrace();
+        }
+    }
+
+    private void setTag(List<CommonModel> speciality_list) {
+        chipGroup.removeAllViews();
+        for (int index = 0; index < speciality_list.size(); index++) {
+            final String tagName = speciality_list.get(index).Name;
             final Chip chip = new Chip(context);
             ChipDrawable chipDrawable = ChipDrawable.createFromAttributes(context, null, 0, R.style.Widget_MaterialComponents_Chip_Choice);
             chip.setChipDrawable(chipDrawable);
@@ -685,6 +824,8 @@ public class Profile extends Fragment {
             );
             chip.setPadding(paddingDp, paddingDp, paddingDp, paddingDp);
             chip.setText(tagName);
+            chip.setId(index + 1);
+            chip.setChecked(speciality_list.get(index).isSelected);
             chip.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -692,21 +833,8 @@ public class Profile extends Fragment {
                     //[1, 2, 9, 13]
                 }
             });
-            /*chip.setCloseIconResource(R.drawable.ic_baseline_close_24);
-            chip.setCloseIconEnabled(true);
-            //Added click listener on close icon to remove tag from ChipGroup
-            chip.setOnCloseIconClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //tagList.remove(tagName);
-                    chipGroup.removeView(chip);
-                }
-            });*/
-
             chipGroup.addView(chip);
         }
-
-        return view;
     }
 
     private void getTimeSlot() {
@@ -927,7 +1055,9 @@ public class Profile extends Fragment {
             jsonObject.addProperty("is_PCC", is_pcc_check);
             jsonObject.addProperty("is_fulltime", is_exp_check);
             jsonObject.addProperty("zipcode", et_zipcode.getText().toString().trim());
-            jsonObject.addProperty("experience_years", et_expirience.getText().toString().trim() + " "+ exp_type.getSelectedItem());
+            jsonObject.addProperty("address", et_address.getText().toString().trim());
+            jsonObject.addProperty("speciality", chipGroup.getCheckedChipIds().toString());
+            jsonObject.addProperty("experience_years", et_expirience.getText().toString().trim() + " " + exp_type.getSelectedItem());
 
             Call<JsonObject> d = RetrofitAPI.getInstance().getApi().updateprofile(appPreferences.getId(), jsonObject);
             d.enqueue(new Callback<JsonObject>() {
@@ -1149,7 +1279,8 @@ public class Profile extends Fragment {
                                     R.layout.spinner_item, R.id.item, list);
                             state.setAdapter(stateadapter);
 
-                            getProfile();
+                            getSpecility();
+
 
                         } else {
                             Toasty.error(context, obj.getString("message"), Toast.LENGTH_LONG).show();
@@ -1271,7 +1402,7 @@ public class Profile extends Fragment {
                                 selected_localities.setText(sel);
 
 
-                                for(int i = 0; i < list_localities.size(); ++i){
+                                for (int i = 0; i < list_localities.size(); ++i) {
                                     bool_locality_checked[i] = false;
                                 }
 
@@ -1281,11 +1412,78 @@ public class Profile extends Fragment {
                                 selected_localities.setVisibility(View.GONE);
                             }
 
-                            /*for (int j = 0; j < list1.size(); j++) {
-                                if (list1.get(j).Id.matches(data.getString("City_Id"))) {
-                                    city.setSelection(j);
+                            et_address.setText(data.getString("address"));
+                            Log.e("speciality_id", data.getString("speciality_id"));
+                            String arrr = data.getString("speciality_id").replaceAll("\\[", "").replaceAll("\\]", "");
+                            String[] elements = arrr.split(",");
+
+                            for (String element : elements) {
+                                for (int k = 0; k < speciality_list.size(); k++) {
+                                    if (speciality_list.get(k).Id.matches(element.trim())) {
+                                        speciality_list.get(k).isSelected = true;
+                                        break;
+                                    }
                                 }
-                            }*/
+
+                            }
+                            setTag(speciality_list);
+                            getPaymentInfo();
+                            dialog.dismiss();
+
+                        } else {
+                            dialog.dismiss();
+                            Toasty.error(context, obj.getString("message"), Toast.LENGTH_LONG).show();
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        dialog.dismiss();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<JsonObject> call, Throwable t) {
+                    Log.e("re", "" + t.toString());
+                    dialog.dismiss();
+                }
+            });
+
+        } catch (Exception e) {
+            dialog.dismiss();
+            e.printStackTrace();
+        }
+    }
+
+    private void getPaymentInfo() {
+        dialog = new Dialog(context);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        dialog.setContentView(R.layout.dialog_layout);
+        dialog.setCancelable(false);
+        AVLoadingIndicatorView progressView = (AVLoadingIndicatorView) dialog.findViewById(R.id.progressView);
+        try {
+            Call<JsonObject> d = RetrofitAPI.getInstance().getApi().getPaymentInfo(appPreferences.getId());
+            d.enqueue(new Callback<JsonObject>() {
+                @Override
+                public void onResponse(Call<JsonObject> call, retrofit2.Response<JsonObject> response) {
+                    try {
+                        dialog.dismiss();
+                        JSONObject obj = new JSONObject(response.body().toString());
+
+                        //JSONArray arr = obj.getJSONArray("data");
+
+                        Log.e("API", response.body().toString());
+
+                        if (obj.getString("status").matches("true")) {
+
+                            JSONObject data = obj.getJSONObject("data");
+
+                            account_number.setText(data.getString("account_no"));
+                            re_account_number.setText(data.getString("account_no"));
+                            bank_name.setText(data.getString("bank_name"));
+                            ifsc.setText(data.getString("ifsc"));
+                            recipient_name.setText(data.getString("receipt_name"));
+
                             dialog.dismiss();
 
                         } else {
