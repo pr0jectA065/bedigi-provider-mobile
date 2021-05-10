@@ -17,10 +17,10 @@ android {
     buildToolsVersion "29.0.1"
     defaultConfig {
         applicationId "com.bedigi.partner"
-        minSdkVersion 22
+        minSdkVersion 24
         targetSdkVersion 29
-        versionCode 15
-        versionName "1.14"
+        versionCode 16
+        versionName "1.15"
         multiDexEnabled true
         manifestPlaceholders = [
                 onesignal_app_id               : 'b1e732ef-ffed-41bd-b3ba-d7c96ba89210',

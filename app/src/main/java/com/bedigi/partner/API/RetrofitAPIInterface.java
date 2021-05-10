@@ -48,6 +48,9 @@ public interface RetrofitAPIInterface {
     @GET("provider/addtimeslot/provider_id/{provider_id}")
     Call<JsonObject> addtimeslot(@Path("provider_id") String provider_id);
 
+    @GET("common/speciality")
+    Call<JsonObject> getSpecility();
+
     @GET("provider/follow/provider_id/{provider_id}")
     Call<JsonObject> followList(@Path("provider_id") String provider_id);
 
@@ -66,11 +69,17 @@ public interface RetrofitAPIInterface {
     @GET("services/chatlist/provider_id/{provider_id}")
     Call<JsonObject> getChatList(@Path("provider_id") String provider_id);
 
+    @GET("user/bank_detail/user_id/{user_id}")
+    Call<JsonObject> getPaymentInfo(@Path("user_id") String user_id);
+
     @POST("provider/services/provider_id/{provider_id}")
     Call<JsonObject> add_service(@Path("provider_id") String provider_id, @Body JsonObject loginDetails);
 
     @POST("Provider/addtimeslot/provider_id/{provider_id}/")
     Call<JsonObject> saveTimeSlotAPI(@Path("provider_id") String provider_id, @Body JsonObject loginDetails);
+
+    @POST("user/bank_detail")
+    Call<JsonObject> savePaymentInfo(@Body JsonObject loginDetails);
 
     @POST("provider/services/provider_id/{provider_id}/")
     Call<JsonObject> update_service(@Path("provider_id") String provider_id, @Body JsonObject loginDetails);

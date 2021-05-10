@@ -665,6 +665,24 @@
                                 android:layout_marginTop="@dimen/dp_10"
                                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                                 app:startIconDrawable="@drawable/icon_name"
+                                android:hint="Bank Name*">
+
+                                <EditText
+                                    android:id="@+id/bank_name"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:inputType="text"
+                                    android:padding="@dimen/dp_10"
+                                    android:textColor="@color/black"
+                                    android:textSize="@dimen/sp_16" />
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/dp_10"
+                                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                                app:startIconDrawable="@drawable/icon_name"
                                 android:hint="IFSC*">
 
                                 <EditText
