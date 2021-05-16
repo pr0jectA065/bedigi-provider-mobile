@@ -112,8 +112,6 @@ public class MyServices extends Fragment {
             }
         });
 
-        getInfo();
-
         return view;
     }
 
@@ -126,7 +124,7 @@ public class MyServices extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
+        getInfo();
     }
 
     private void getInfo() {

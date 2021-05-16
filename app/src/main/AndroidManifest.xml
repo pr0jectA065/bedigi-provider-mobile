@@ -9,8 +9,14 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
+        android:largeHeap="true"
+        android:hardwareAccelerated="true"
         android:theme="@style/MyMaterialTheme"
         android:usesCleartextTraffic="true">
+        <activity
+            android:name=".Activities.ServiceGallery"
+            android:label="@string/title_activity_service_gallery"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".Activities.ChatList"
             android:screenOrientation="portrait" />
@@ -44,6 +50,10 @@
             </intent-filter>
         </activity>
 
+        <meta-data
+            android:name="com.google.android.wearable.standalone"
+            android:value="true" />
+
         <receiver
             android:name=".Preferences.MyBroadcastReceiver"
             android:exported="true">
@@ -51,10 +61,14 @@
                 <action android:name="com.google.android.gms.auth.api.phone.SMS_RETRIEVED" />
             </intent-filter>
         </receiver>
-    </application>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
+    </application>
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
 </manifest>

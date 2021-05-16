@@ -81,7 +81,7 @@
                     android:id="@+id/price"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="number"
+                    android:inputType="numberDecimal"
                     android:padding="@dimen/dp_10"
                     android:textColor="@color/black"
                     android:textSize="@dimen/sp_16" />
