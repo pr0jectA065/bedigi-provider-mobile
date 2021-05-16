@@ -19,8 +19,8 @@ android {
         applicationId "com.bedigi.partner"
         minSdkVersion 24
         targetSdkVersion 29
-        versionCode 16
-        versionName "1.15"
+        versionCode 17
+        versionName "1.16"
         multiDexEnabled true
         manifestPlaceholders = [
                 onesignal_app_id               : 'b1e732ef-ffed-41bd-b3ba-d7c96ba89210',
@@ -69,6 +69,7 @@ dependencies {
     implementation 'com.github.imtuann:FloatingActionButtonExpandable:1.1.2'
 
     implementation 'com.google.android.gms:play-services-maps:15.0.1'
+    implementation 'androidx.wear:wear:1.0.0'
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'
@@ -76,6 +77,7 @@ dependencies {
 
     implementation "androidx.core:core-ktx:+"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    compileOnly 'com.google.android.wearable:wearable:2.6.0'
 }
 repositories {
     mavenCentral()

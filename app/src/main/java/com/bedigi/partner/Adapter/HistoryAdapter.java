@@ -17,6 +17,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -56,10 +57,11 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyViewHo
 
         ImageView status;
         TextView package_name, datetime, location, patient_name, tvStatus;
-        ImageButton dropdown;
+        //ImageButton dropdown;
+        LinearLayout action_view1;
         View view;
         RelativeLayout action_view;
-        TextView start,hold,stop,download_invoice;
+        TextView start,hold,stop,download_invoice,accept,reject;
 
         public MyViewHolder(View root) {
             super(root);
@@ -70,7 +72,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyViewHo
             tvStatus = (TextView) root.findViewById(R.id.tvStatus);
             patient_name = (TextView) root.findViewById(R.id.patient_name);
 
-            dropdown = (ImageButton) root.findViewById(R.id.dropdown);
+            //dropdown = (ImageButton) root.findViewById(R.id.dropdown);
 
             //cancel=(TextView)root.findViewById(R.id.cancel);
             //reschdule=(TextView)root.findViewById(R.id.reschdule);
@@ -79,9 +81,12 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyViewHo
 
             view = root.findViewById(R.id.view);
             action_view = root.findViewById(R.id.action_view);
+            action_view1 = root.findViewById(R.id.action_view1);
             start = root.findViewById(R.id.start);
             hold = root.findViewById(R.id.hold);
             stop = root.findViewById(R.id.stop);
+            accept = root.findViewById(R.id.accept);
+            reject = root.findViewById(R.id.reject);
             download_invoice = root.findViewById(R.id.download_invoice);
 
         }
@@ -138,30 +143,32 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyViewHo
             holder.patient_name.setText(verticalList.get(position).user_name);
         }
 
+        if(type.matches("today")){
+            holder.view.setVisibility(View.VISIBLE);
+            holder.action_view.setVisibility(View.VISIBLE);
+            holder.action_view1.setVisibility(View.GONE);
+        } else {
+            holder.view.setVisibility(View.VISIBLE);
+            holder.action_view.setVisibility(View.GONE);
+            holder.action_view1.setVisibility(View.VISIBLE);
+        }
+
         if (verticalList.get(position).status.matches("1")) {
             holder.status.setImageResource(R.drawable.ic_verified);
             holder.tvStatus.setText("Accepted");
-            holder.dropdown.setVisibility(View.INVISIBLE);
+            holder.action_view1.setVisibility(View.GONE);
         } else if (verticalList.get(position).status.matches("2")) {
             holder.status.setImageResource(R.drawable.ic_warning);
             holder.tvStatus.setText("Pending");
             if (verticalList.get(position).is_past_date.matches("1")) {
-                holder.dropdown.setVisibility(View.INVISIBLE);
+                holder.action_view1.setVisibility(View.GONE);
             } else {
-                holder.dropdown.setVisibility(View.VISIBLE);
+                holder.action_view1.setVisibility(View.VISIBLE);
             }
         } else if (verticalList.get(position).status.matches("3")) {
             holder.status.setImageResource(R.drawable.ic_cancelled);
             holder.tvStatus.setText("Cancelled");
-            holder.dropdown.setVisibility(View.INVISIBLE);
-        }
-
-        if(type.matches("today")){
-           holder.view.setVisibility(View.VISIBLE);
-           holder.action_view.setVisibility(View.VISIBLE);
-        } else {
-            holder.view.setVisibility(View.GONE);
-            holder.action_view.setVisibility(View.GONE);
+            holder.action_view1.setVisibility(View.GONE);
         }
 
         if(verticalList.get(position).service_status.matches("1")){
@@ -205,7 +212,23 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyViewHo
             }
         });
 
-        holder.dropdown.setOnClickListener(new View.OnClickListener() {
+        holder.accept.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onEvent("1", verticalList.get(position).appointment_id, String.valueOf(position),
+                        "", verticalList.get(position).date);
+            }
+        });
+
+        holder.reject.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onEvent("3", verticalList.get(position).appointment_id, String.valueOf(position),
+                        "", verticalList.get(position).date);
+            }
+        });
+
+        /*holder.dropdown.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -234,7 +257,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyViewHo
                 popup.show();
 
             }
-        });
+        });*/
 
         holder.download_invoice.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -243,6 +266,8 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyViewHo
                         "", verticalList.get(position).date);
             }
         });
+
+
 
     }
 

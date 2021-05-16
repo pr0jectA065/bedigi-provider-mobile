@@ -1,6 +1,8 @@
 package com.bedigi.partner.Activities;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -11,6 +13,7 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import com.bedigi.partner.API.RetrofitAPI;
 import com.bedigi.partner.Preferences.AppPreferences;
@@ -32,6 +35,11 @@ public class Login extends AppCompatActivity {
     String android_id="";
     EditText username_et,referral_code;
 
+    String[] permissionsRequired = new String[]{
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE};
+    private static final int PERMISSION_CALLBACK_CONSTANT = 100;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +57,18 @@ public class Login extends AppCompatActivity {
                 onBackPressed();
             }
         });
+
+        if (ActivityCompat.checkSelfPermission(Login.this, permissionsRequired[0]) != PackageManager.PERMISSION_GRANTED
+                || ActivityCompat.checkSelfPermission(Login.this, permissionsRequired[1]) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(Login.this, permissionsRequired[0])
+                    || ActivityCompat.shouldShowRequestPermissionRationale(Login.this, permissionsRequired[1])) {
+
+                ActivityCompat.requestPermissions(Login.this, permissionsRequired, PERMISSION_CALLBACK_CONSTANT);
+
+            } else {
+                ActivityCompat.requestPermissions(Login.this, permissionsRequired, PERMISSION_CALLBACK_CONSTANT);
+            }
+        }
 
         username_et.addTextChangedListener(new TextWatcher() {
             @Override

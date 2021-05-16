@@ -73,9 +73,13 @@ public class UpcomingAppointments extends Fragment {
         gifImageView = (GifImageView) view.findViewById(R.id.GifImageView);
         gifImageView.setGifImageResource(R.drawable.no_data_gif);
 
-        getUpcomingAppointments();
-
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getUpcomingAppointments();
     }
 
     private void getUpcomingAppointments() {
@@ -272,7 +276,7 @@ public class UpcomingAppointments extends Fragment {
 
                         if (obj.getString("status").matches("true")) {
                             Toasty.success(context,obj.getString("message"),Toast.LENGTH_LONG).show();
-
+                            getUpcomingAppointments();
                         } else {
                             Toasty.error(context, obj.getString("message"), Toast.LENGTH_LONG).show();
                         }

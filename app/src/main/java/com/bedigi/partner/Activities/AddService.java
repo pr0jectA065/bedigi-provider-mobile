@@ -20,6 +20,8 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Base64;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -86,7 +88,6 @@ public class AddService extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setTitle("Add Service");
 
         appPreferences = new AppPreferences(AddService.this);
 
@@ -191,13 +192,21 @@ public class AddService extends AppCompatActivity {
                             add_service();
                         }
 
+                    } else if (booking_type.matches("update")) {
+
+                        if (type.matches("update")) {
+                            update_service();
+                        } else {
+                            add_service();
+                        }
+
                     } else {
                         save.stopAnimation();
                         save.revertAnimation();
                         Toasty.error(AddService.this, "Booking amount is required!", Toast.LENGTH_LONG).show();
                     }
 
-                    Log.e("booking_val",booking_val);
+                    Log.e("booking_val", booking_val);
 
                 } else {
                     save.stopAnimation();
@@ -302,8 +311,36 @@ public class AddService extends AppCompatActivity {
         });
 
         type = getIntent().getStringExtra("type");
+        if (type.matches("update")) {
+            getSupportActionBar().setTitle("Edit Service");
+            booking_type = "update";
+        } else {
+            getSupportActionBar().setTitle("Add Service");
+        }
 
         gethomeslider();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.gallery_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.gallery:
+               openGalleryActivity();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void openGalleryActivity() {
+        startActivity(new Intent(AddService.this,ServiceGallery.class));
     }
 
     private void update_service() {
@@ -509,7 +546,6 @@ public class AddService extends AppCompatActivity {
 
     private void gethomeslider() {
         try {
-
             Call<JsonObject> d = RetrofitAPI.getInstance().getApi().serviceList();
             d.enqueue(new Callback<JsonObject>() {
                 @Override
@@ -519,7 +555,6 @@ public class AddService extends AppCompatActivity {
                         JSONArray arr1 = obj.getJSONArray("data");
 
                         list = new ArrayList<>();
-
                         list.add(new HomeModel("0", "0", "Select Service", "", ""));
 
                         for (int i = 0; i < arr1.length(); i++) {
@@ -537,9 +572,7 @@ public class AddService extends AppCompatActivity {
                         service.setAdapter(adapter);
 
                         if (type.matches("update")) {
-
                             try {
-
                                 obj = new JSONObject(getIntent().getStringExtra("json"));
                                 Log.e("json", obj.toString());
 
@@ -567,13 +600,13 @@ public class AddService extends AppCompatActivity {
 
                                 start_date.setText(obj.getString("start_date"));
                                 end_date.setText(obj.getString("end_date"));
+                                booking_mat_value.setText(obj.getString("booking_amount"));
                                 booking_amount.setText("Booking amount: \u20B9" + obj.getString("booking_amount"));
                                 old_booking_amount = obj.getString("booking_amount");
 
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
-
                         }
 
                     } catch (Exception e) {

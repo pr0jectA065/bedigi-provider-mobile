@@ -72,9 +72,13 @@ public class TodayAppointments extends Fragment {
         gifImageView = (GifImageView) view.findViewById(R.id.GifImageView);
         gifImageView.setGifImageResource(R.drawable.no_data_gif);
 
-        getTodayAppointments();
-
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getTodayAppointments();
     }
 
     private void getTodayAppointments() {
@@ -332,7 +336,7 @@ public class TodayAppointments extends Fragment {
 
                         if (obj.getString("status").matches("true")) {
                             Toasty.success(context, obj.getString("message"), Toast.LENGTH_LONG).show();
-
+                            getTodayAppointments();
                         } else {
                             Toasty.error(context, obj.getString("message"), Toast.LENGTH_LONG).show();
                         }
